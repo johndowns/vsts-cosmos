@@ -14,10 +14,12 @@ phases:
 
   steps:
     - task: Npm@1
+      displayName: Run NPM Install
       inputs:
         verbose: 'false'
 
     - task: Npm@1
+      displayName: Run Build Script
       inputs:
         command: 'custom'
         verbose: 'false'
