@@ -25,6 +25,12 @@ phases:
         verbose: 'false'
         customCommand: 'run build'
 
+    - task: CopyFiles@2
+      displayName: Copy VSTS Extension Manifest
+      inputs:
+        Contents: 'vss-extension.json'
+        TargetFolder: 'output'
+    
     - task: PublishBuildArtifacts@1
       displayName: Publish Artifacts
       inputs:

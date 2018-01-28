@@ -1,0 +1,36 @@
+{
+  "manifestVersion": 1,
+  "id": "create-cosmos-db-collection",
+  "name": "Create Cosmos DB Collection",
+  "version": "0.1.0",
+  "publisher": "John Downs",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "Adds a VSTS release task to create a Cosmos DB collection.",
+  "categories": [
+    "Build and release"
+  ],
+  "icons": {
+    "default": "icon.png"
+  },
+  "files": [
+    {
+      "path": "cosmos-collection"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "create-cosmos-db-collection-step",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "CreateCosmosDbCollection"
+      }
+    }
+  ]
+}
