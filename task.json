@@ -1,0 +1,145 @@
+{
+  "id": "a6086ab0-02d1-11e8-a9ef-2bb992338c9d",
+  "name": "CreateCosmosDbCollection",
+  "friendlyName": "Create Cosmos DB Collection",
+  "description": "Creates a Cosmos DB collection.",
+  "author": "John Downs",
+  "category": "Utility",
+  "visibility": [
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "Create Cosmos DB Collection $(message)",
+  "inputs": [
+    {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "Connection type",
+      "required": true,
+      "defaultValue": "unlimited",
+      "helpMarkDown": "TODO",
+      "options": {
+        "azure": "Azure Resource Manager",
+        "key": "Cosmos DB account key or SAS token"
+      },
+      "groupName": "connection"
+    },
+    {
+      "name": "connectionAzure",
+      "type": "connectedService:AzureRM",
+      "label": "Azure connection",
+      "required": true,
+      "helpMarkDown": "TODO",
+      "visibleRule": "connectionType = azure",
+      "groupName": "connection"
+    },
+    {
+      "name": "connectionKey",
+      "type": "string",
+      "label": "Cosmos DB account key or SAS token",
+      "required": true,
+      "helpMarkDown": "TODO",
+      "visibleRule": "connectionType = key",
+      "groupName": "connection"
+    },
+    {
+      "name": "collectionAccountName",
+      "type": "string",
+      "label": "Cosmos DB account name",
+      "required": true,
+      "helpMarkDown": "TODO",
+      "groupName": "collection"
+    },
+    {
+      "name": "collectionName",
+      "type": "string",
+      "label": "Collection name",
+      "required": true,
+      "helpMarkDown": "Unique identifier for the collection and used for id-based routing through REST and all SDKs",
+      "groupName": "collection"
+    },
+    {
+      "name": "collectionDatabaseName",
+      "type": "string",
+      "label": "Database name",
+      "required": true,
+      "helpMarkDown": "The name of the database that should contain this collection.",
+      "groupName": "collection"
+    },
+    {
+      "name": "collectionThroughput",
+      "type": "string",
+      "label": "Throughput",
+      "defaultValue": "1000",
+      "helpMarkDown": "Each collection can be provisioned throughput in Request Units per second (RU/s). 1 RU corresponds to the throughput of a read of a 1 KB document. [Learn More](https://www.documentdb.com/capacityplanner)",
+      "groupName": "collection"
+    },
+    {
+      "name": "collectionStorageCapacity",
+      "type": "pickList",
+      "label": "Storage capacity",
+      "required": true,
+      "defaultValue": "unlimited",
+      "helpMarkDown": "This is the maximum storage size of the collection. Storage is billed per GB based on consumption.",
+      "options": {
+        "fixed": "Fixed (10GB)",
+        "unlimited": "Unlimited"
+      },
+      "groupName": "collection"
+    },
+    {
+      "name": "collectionPartitionKey",
+      "type": "string",
+      "label": "Partition key",
+      "required": true,
+      "helpMarkDown": "The Partition Key is used to automatically partition data among multiple servers for scalability. Choose a JSON property name that has a wide range of values and is likely to have evenly distributed access patterns.\n[For more details refer to partitioning documentation here.](https://docs.microsoft.com/en-us/azure/documentdb/documentdb-partition-data)",
+      "visibleRule": "collectionStorageCapacity = unlimited",
+      "groupName": "collection"
+    },
+    {
+      "name": "collectionCreateDatabaseIfNotExists",
+      "type": "boolean",
+      "label": "Create database if it doesn't already exist",
+      "defaultValue": true,
+      "helpMarkDown": "TODO",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failIfExists",
+      "type": "boolean",
+      "label": "Fail if collection already exists",
+      "defaultValue": false,
+      "helpMarkDown": "If this is selected, the task will fail the release if the collection already exists. If this is not selected, the task will ignore a collection if it already exists, and will not adjust the collection in any way.",
+      "groupName": "advanced"
+    }
+  ],
+  "groups": [
+    {
+      "name": "connection",
+      "displayName": "Connection to Cosmos DB",
+      "isExpanded": true
+    },
+    {
+      "name": "collection",
+      "displayName": "Collection",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "src/index.js",
+      "argumentFormat": ""
+    }
+  }
+}
