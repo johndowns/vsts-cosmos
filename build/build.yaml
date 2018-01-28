@@ -1,0 +1,31 @@
+# Builds the Cosmos DB Collection Create VSTS task
+
+name: $(BuildID)
+
+phases:
+
+################################################################################
+- phase: Build
+  displayName: Build
+  queue:
+    name: Hosted VS2017
+    demands:
+      - npm
+
+  steps:
+    - task: Npm@1
+      inputs:
+        verbose: 'false'
+
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        verbose: 'false'
+        customCommand: 'run build'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Artifacts
+      inputs:
+        pathToPublish: output
+        artifactName: drop
+        artifactType: container
