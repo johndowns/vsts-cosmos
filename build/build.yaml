@@ -27,7 +27,8 @@ phases:
     - task: CopyFiles@2
       displayName: Copy Task Manifest - CreateCosmosDbCollection
       inputs:
-        Contents: 'src/CreateCosmosDbCollection/task.json'
+        SourceFolder: 'src/CreateCosmosDbCollection'
+        Contents: 'task.json'
         TargetFolder: 'output/CreateCosmosDbCollection'
 
     - task: CopyFiles@2
