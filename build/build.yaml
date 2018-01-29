@@ -4,7 +4,6 @@ name: $(BuildID)
 
 phases:
 
-################################################################################
 - phase: Build
   displayName: Build
   queue:
@@ -24,6 +23,12 @@ phases:
         command: 'custom'
         verbose: 'false'
         customCommand: 'run build'
+
+    - task: CopyFiles@2
+      displayName: Copy Task Manifest - CreateCosmosDbCollection
+      inputs:
+        Contents: 'src/CreateCosmosDbCollection/task.json'
+        TargetFolder: 'output/CreateCosmosDbCollection'
 
     - task: CopyFiles@2
       displayName: Copy VSTS Extension Manifest
