@@ -10,24 +10,29 @@ async function run() {
         let accountKey = task.getInput("connectionAccountKey", true); // TODO allow for Azure connection instead of key
         let collectionName = task.getInput("collectionName", true);
         let collectionDatabaseName = task.getInput("collectionDatabaseName", true);
-        let collectionThroughput = task.getInput("collectionThroughput", true);
+        let collectionThroughputInput = task.getInput("collectionThroughput", true);
         let collectionStorageCapacity = task.getInput("collectionStorageCapacity", true);
         let collectionPartitionKey = task.getInput("collectionPartitionKey");
         let collectionCreateDatabaseIfNotExists = task.getBoolInput("collectionCreateDatabaseIfNotExists", true);
         let failIfExists = task.getBoolInput("failIfExists", true);
-
-        // TODO validate
-
         let databaseLink = UriFactory.createDatabaseUri(collectionDatabaseName);
 
-        // connect to Cosmos DB and initialise a DocumentClient
+        // validate the inputs
+        // TODO validate conditionally required fields
+        let collectionThroughput = Number(collectionThroughputInput);
+        if (isNaN(collectionThroughput)) {
+            throw new Error('Collection throughput must be a number.');
+            // TODO test this
+        }
+
+        // initialise a DocumentClient for connecting to Cosmos DB
         client = new DocumentClient(accountEndpoint, {
             masterKey: accountKey
         });
 
         // try to create the collection
         task.debug(`Attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
-        var collectionCreateResult = await tryCreateCollectionAsync(databaseLink, collectionName);
+        var collectionCreateResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput);
         switch (collectionCreateResult) {
             case CreateCollectionResult.Success:
                 task.debug(`Collection created successfully.`);
@@ -38,19 +43,19 @@ async function run() {
                 if (failIfExists) {
                     throw new Error(`Collection ${ collectionName } already exists.`);
                 }
-                else {
-                    // the task succeeded
-                }
                 break;
 
             case CreateCollectionResult.DatabaseDoesNotExist:
-                // TODO handle collectionCreateDatabaseIfNotExists param
-                task.debug(`Database does not exist. Creating database...`);
+                if ( ! collectionCreateDatabaseIfNotExists) {
+                    throw new Error(`Database ${ collectionDatabaseName } does not exist.`);
+                }
+
+                task.debug(`Database '${ collectionDatabaseName }' does not exist. Creating database...`);
                 var databaseCreateResult = createDatabaseAsync(collectionDatabaseName);
                 
                 task.debug(`Database created.`);
-                task.debug(`Attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
-                var collectionCreateRetryResult = await tryCreateCollectionAsync(databaseLink, collectionName);
+                task.debug(`Re-attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
+                var collectionCreateRetryResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput);
                 if (collectionCreateRetryResult == CreateCollectionResult.Success) {
                     task.debug(`Collection created successfully.`);
                 } else {
@@ -65,11 +70,11 @@ async function run() {
     }
 }
 
-async function tryCreateCollectionAsync(databaseLink: string, collectionName: string): Promise<CreateCollectionResult> {
+async function tryCreateCollectionAsync(databaseLink: string, collectionName: string, collectionThroughput: number): Promise<CreateCollectionResult> {
     return new Promise<CreateCollectionResult>(function(resolve, reject) {
         client.createCollection(databaseLink, 
             { id: collectionName },
-            //{ offerThroughput: 1000, offerType: "TODO" },
+            { offerThroughput: collectionThroughput }, // TODO offerType, partitionKey
             (error, resource, responseHeaders) => {
                 if (! error) {
                     resolve(CreateCollectionResult.Success);
@@ -88,9 +93,11 @@ async function createDatabaseAsync(databaseName: string) {
     return new Promise(function(resolve, reject) {
         client.createDatabase({ id: databaseName }, 
             (error, resource, responseHeaders) => {
-                if (error) {
-                    reject(`Create database operation failed with error code '${error.code}', body '${error.body}'.`);
+                if (! error) {
+                    resolve();
                 }
+
+                reject(`Create database operation failed with error code '${error.code}', body '${error.body}'.`);
             });
     });
 }
