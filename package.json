@@ -1,14 +1,14 @@
 {
-  "name": "createcosmosdbcollection",
+  "name": "vstscosmosdb",
   "version": "0.1.0",
-  "description": "VSTS release task to create a Cosmos DB collection.",
+  "description": "VSTS release tasks for Cosmos DB.",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -p src/**/tsconfig.json"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/johndowns/vsts-cosmos-collection.git"
+    "url": "https://github.com/johndowns/vsts-cosmos.git"
   },
   "dependencies": {
     "async": "^2.6.0",
