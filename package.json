@@ -4,7 +4,7 @@
   "description": "VSTS release tasks for Cosmos DB.",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p src/**/tsconfig.json"
+    "build": "tsc -p src/CreateCosmosDbCollection/tsconfig.json"
   },
   "repository": {
     "type": "git",
