@@ -1,6 +1,6 @@
 import task = require('vsts-task-lib/task');
 import toolRunnerModule = require('vsts-task-lib/toolrunner');
-import { DocumentClient, UriFactory, UniqueId } from 'documentdb';
+import { DocumentClient, UriFactory, UniqueId, CollectionPartitionKey, Collection } from 'documentdb';
 var client: DocumentClient = require('documentdb').DocumentClient;
 
 async function run() {
@@ -32,7 +32,7 @@ async function run() {
 
         // try to create the collection
         task.debug(`Attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
-        var collectionCreateResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput);
+        var collectionCreateResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput, collectionPartitionKey);
         switch (collectionCreateResult) {
             case CreateCollectionResult.Success:
                 task.debug(`Collection created successfully.`);
@@ -55,7 +55,7 @@ async function run() {
                 
                 task.debug(`Database created.`);
                 task.debug(`Re-attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
-                var collectionCreateRetryResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput);
+                var collectionCreateRetryResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput, collectionPartitionKey);
                 if (collectionCreateRetryResult == CreateCollectionResult.Success) {
                     task.debug(`Collection created successfully.`);
                 } else {
@@ -70,11 +70,22 @@ async function run() {
     }
 }
 
-async function tryCreateCollectionAsync(databaseLink: string, collectionName: string, collectionThroughput: number): Promise<CreateCollectionResult> {
+async function tryCreateCollectionAsync(databaseLink: string, collectionName: string, collectionThroughput: number, collectionPartitionKey?: string): Promise<CreateCollectionResult> {
     return new Promise<CreateCollectionResult>(function(resolve, reject) {
+
+        var collection: Collection = {
+            id: collectionName
+        };
+        if (collectionPartitionKey) {
+            collection.partitionKey = {
+                paths: [ collectionPartitionKey ],
+                kind: "Hash"
+            };
+        }
+
         client.createCollection(databaseLink, 
-            { id: collectionName },
-            { offerThroughput: collectionThroughput }, // TODO offerType, partitionKey
+            collection,
+            { offerThroughput: collectionThroughput },
             (error, resource, responseHeaders) => {
                 if (! error) {
                     resolve(CreateCollectionResult.Success);
@@ -95,9 +106,9 @@ async function createDatabaseAsync(databaseName: string) {
             (error, resource, responseHeaders) => {
                 if (! error) {
                     resolve();
+                } else {
+                    reject(`Create database operation failed with error code '${error.code}', body '${error.body}'.`);
                 }
-
-                reject(`Create database operation failed with error code '${error.code}', body '${error.body}'.`);
             });
     });
 }
