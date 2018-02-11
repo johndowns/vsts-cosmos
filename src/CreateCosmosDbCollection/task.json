@@ -5,6 +5,9 @@
   "description": "Creates a Cosmos DB collection.",
   "author": "John Downs",
   "category": "Utility",
+  "icons": {
+    "default": "../icon-128.png"
+  },
   "visibility": [
     "Release"
   ],

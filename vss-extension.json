@@ -13,6 +13,9 @@
   "categories": [
     "Build and release"
   ],
+  "icons": {
+    "default": "icon-128.png"
+  },
   "files": [
     {
       "path": "output/CreateCosmosDbCollection",
