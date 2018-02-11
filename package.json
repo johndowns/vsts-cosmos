@@ -8,13 +8,9 @@
     "url": "https://github.com/johndowns/vsts-cosmos.git"
   },
   "scripts": {
-    "publish": "tfx extension create --manifest-globs vss-extension.json --output-path output/publish"
+    "package": "tfx extension create --manifest-globs vss-extension.json --output-path output/publish"
   },
   "devDependencies": {
-    "@types/documentdb": "^1.10.4",
-    "@types/node": "^9.4.0",
-    "@types/q": "^1.0.7",
-    "tfx-cli": "~0.5.4",
-    "typescript": "~2.6.2"
+    "tfx-cli": "~0.5.4"
   }
 }

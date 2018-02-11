@@ -4,21 +4,24 @@ name: $(BuildID)
 
 phases:
 
-- phase: Build
-  displayName: Build
+- phase: Build and Package
+  displayName: Build and Package
   queue:
     name: Hosted VS2017
     demands:
       - npm
 
   steps:
+
+    # Build
+
     - task: Npm@1
-      displayName: Run NPM Install - Root
+      displayName: Install NPM Packages - Root
       inputs:
         verbose: 'false'
 
     - task: Npm@1
-      displayName: Run NPM Install - CreateCosmosDbCollection
+      displayName: Install NPM Packages - CreateCosmosDbCollection
       inputs:
         verbose: 'false'
         workingDir: 'src/CreateCosmosDbCollection'
@@ -30,6 +33,21 @@ phases:
         verbose: 'false'
         workingDir: 'src/CreateCosmosDbCollection'
         customCommand: 'run build'
+
+    - task: DeleteFiles@1
+      inputs:
+        SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
+        Contents: '**'
+
+    # Package
+
+    - task: Npm@1
+      displayName: Install NPM Production Packages - CreateCosmosDbCollection
+      inputs:
+        command: 'custom'
+        verbose: 'false'
+        workingDir: 'src/CreateCosmosDbCollection'
+        customCommand: 'install --only=production'
 
     - task: CopyFiles@2
       displayName: Copy Task Manifest - CreateCosmosDbCollection
@@ -46,11 +64,11 @@ phases:
         TargetFolder: 'output/CreateCosmosDbCollection/node_modules'
     
     - task: Npm@1
-      displayName: Publish Extension to VSIX File
+      displayName: Package Extension to VSIX File
       inputs:
         command: 'custom'
         verbose: 'false'
-        customCommand: 'run publish'
+        customCommand: 'run package'
     
     - task: PublishBuildArtifacts@1
       displayName: Publish VSIX File
