@@ -15,6 +15,12 @@ phases:
 
     # Build
 
+    - task: qetza.replacetokens.replacetokens-task.replacetokens@2
+      displayName: Update Extension Version with Build ID
+      inputs:
+        targetFiles: 'vss-extension.json'
+        actionOnMissing: 'fail'
+
     - task: Npm@1
       displayName: Install NPM Packages - Root
       inputs:
@@ -35,6 +41,7 @@ phases:
         customCommand: 'run build'
 
     - task: DeleteFiles@1
+      displayName: Delete NPM Development-Time Packages - CreateCosmosDbCollection
       inputs:
         SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
         Contents: '**'
