@@ -3,22 +3,18 @@
   "version": "0.1.0",
   "description": "VSTS release tasks for Cosmos DB.",
   "license": "MIT",
-  "scripts": {
-    "build": "tsc -p src/CreateCosmosDbCollection/tsconfig.json"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/johndowns/vsts-cosmos.git"
   },
-  "dependencies": {
-    "async": "^2.6.0",
-    "documentdb": "^1.14.2",
-    "vsts-task-lib": "^2.1.0"
+  "scripts": {
+    "publish": "tfx extension create --manifest-globs vss-extension.json --output-path output/publish"
   },
   "devDependencies": {
     "@types/documentdb": "^1.10.4",
     "@types/node": "^9.4.0",
     "@types/q": "^1.0.7",
+    "tfx-cli": "~0.5.4",
     "typescript": "~2.6.2"
   }
 }

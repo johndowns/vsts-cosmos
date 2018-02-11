@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "async": "^2.6.0",
+    "documentdb": "^1.14.2",
+    "vsts-task-lib": "^2.1.0"
+  }
+}

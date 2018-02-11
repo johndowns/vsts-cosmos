@@ -2,8 +2,8 @@
   "manifestVersion": 1,
   "id": "cosmos-db-tasks",
   "name": "Cosmos DB VSTS Release Tasks",
-  "version": "0.1.0",
-  "publisher": "John Downs",
+  "version": "0.0.1",
+  "publisher": "johndowns",
   "targets": [
     {
       "id": "Microsoft.VisualStudio.Services"
@@ -13,12 +13,9 @@
   "categories": [
     "Build and release"
   ],
-  "icons": {
-    "default": "icon.png"
-  },
   "files": [
     {
-      "path": "cosmos-collection"
+      "path": "CreateCosmosDbCollection"
     }
   ],
   "contributions": [

@@ -13,15 +13,22 @@ phases:
 
   steps:
     - task: Npm@1
-      displayName: Run NPM Install
+      displayName: Run NPM Install - Root
       inputs:
         verbose: 'false'
 
     - task: Npm@1
-      displayName: Run Build Script
+      displayName: Run NPM Install - CreateCosmosDbCollection
+      inputs:
+        verbose: 'false'
+        workingDir: 'src/CreateCosmosDbCollection'
+
+    - task: Npm@1
+      displayName: Run Build Script - CreateCosmosDbCollection
       inputs:
         command: 'custom'
         verbose: 'false'
+        workingDir: 'src/CreateCosmosDbCollection'
         customCommand: 'run build'
 
     - task: CopyFiles@2
@@ -32,14 +39,22 @@ phases:
         TargetFolder: 'output/CreateCosmosDbCollection'
 
     - task: CopyFiles@2
-      displayName: Copy VSTS Extension Manifest
+      displayName: Copy NPM Packages - CreateCosmosDbCollection
       inputs:
-        Contents: 'vss-extension.json'
-        TargetFolder: 'output'
+        SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
+        Contents: '**\*'
+        TargetFolder: 'output/CreateCosmosDbCollection/node_modules'
+    
+    - task: Npm@1
+      displayName: Publish Extension to VSIX File
+      inputs:
+        command: 'custom'
+        verbose: 'false'
+        customCommand: 'run publish'
     
     - task: PublishBuildArtifacts@1
-      displayName: Publish Artifacts
+      displayName: Publish VSIX File
       inputs:
-        pathToPublish: output
+        pathToPublish: output/publish
         artifactName: drop
         artifactType: container
