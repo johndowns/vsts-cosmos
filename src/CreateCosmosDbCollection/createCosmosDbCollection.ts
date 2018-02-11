@@ -7,7 +7,7 @@ async function run() {
     try {
         // get the inputs
         let accountEndpoint = task.getInput("collectionAccountEndpoint", true);
-        let accountKey = task.getInput("connectionAccountKey", true); // TODO allow for Azure connection instead of key
+        let accountKey = task.getInput("connectionAccountKey", true);
         let collectionName = task.getInput("collectionName", true);
         let collectionDatabaseName = task.getInput("collectionDatabaseName", true);
         let collectionThroughputInput = task.getInput("collectionThroughput", true);

@@ -21,34 +21,11 @@
   "instanceNameFormat": "Create Cosmos DB Collection $(message)",
   "inputs": [
     {
-      "name": "connectionType",
-      "type": "pickList",
-      "label": "Connection type",
-      "required": true,
-      "defaultValue": "key",
-      "helpMarkDown": "TODO",
-      "options": {
-        "azure": "Azure Resource Manager",
-        "key": "Cosmos DB account key or SAS token"
-      },
-      "groupName": "connection"
-    },
-    {
-      "name": "connectionAzure",
-      "type": "connectedService:AzureRM",
-      "label": "Azure connection",
-      "required": true,
-      "helpMarkDown": "TODO",
-      "visibleRule": "connectionType = azure",
-      "groupName": "connection"
-    },
-    {
       "name": "connectionAccountKey",
       "type": "string",
       "label": "Cosmos DB account key or SAS token",
       "required": true,
       "helpMarkDown": "TODO",
-      "visibleRule": "connectionType = key",
       "groupName": "connection"
     },
     {
