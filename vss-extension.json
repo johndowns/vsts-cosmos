@@ -15,7 +15,7 @@
   ],
   "files": [
     {
-      "path": "CreateCosmosDbCollection"
+      "path": "output/CreateCosmosDbCollection"
     }
   ],
   "contributions": [
