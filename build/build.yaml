@@ -1,85 +1,89 @@
 # Builds the Cosmos DB Collection Create VSTS task
 
 name: $(BuildID)
+queue:
+  name: Hosted VS2017
+  demands:
+    - npm
 
-phases:
+variables:
+  MajorVersion: 0
+  MinorVersion: 1
+  RevisionVersion: $(Build.BuildID)
 
-- phase: Build
-  displayName: Build
-  queue:
-    name: Hosted VS2017
-    demands:
-      - npm
+steps:
 
-  steps:
+  # Prepare
 
-    # Build
+  - task: qetza.replacetokens.replacetokens-task.replacetokens@2
+    displayName: Update Variables in JSON Files
+    inputs:
+      targetFiles: '**/*.json'
+      actionOnMissing: 'fail'
 
-    - task: qetza.replacetokens.replacetokens-task.replacetokens@2
-      displayName: Update Variables in JSON Files
-      inputs:
-        targetFiles: '**/*.json'
-        actionOnMissing: 'fail'
+  - task: Npm@1
+    displayName: Install NPM Packages - Root
+    inputs:
+      verbose: 'false'
 
-    - task: Npm@1
-      displayName: Install NPM Packages - Root
-      inputs:
-        verbose: 'false'
+  # Build
 
-    - task: Npm@1
-      displayName: Install NPM Packages - CreateCosmosDbCollection
-      inputs:
-        verbose: 'false'
-        workingDir: 'src/CreateCosmosDbCollection'
+  - task: Npm@1
+    displayName: Install NPM Packages - CreateCosmosDbCollection
+    inputs:
+      verbose: 'false'
+      workingDir: 'src/CreateCosmosDbCollection'
 
-    - task: Npm@1
-      displayName: Run Build Script - CreateCosmosDbCollection
-      inputs:
-        command: 'custom'
-        verbose: 'false'
-        workingDir: 'src/CreateCosmosDbCollection'
-        customCommand: 'run build'
+  - task: Npm@1
+    displayName: Run Build Script - CreateCosmosDbCollection
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      workingDir: 'src/CreateCosmosDbCollection'
+      customCommand: 'run build'
 
-    - task: DeleteFiles@1
-      displayName: Delete NPM Development-Time Packages - CreateCosmosDbCollection
-      inputs:
-        SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
-        Contents: '**'
+  - task: DeleteFiles@1
+    displayName: Delete NPM Development-Time Packages - CreateCosmosDbCollection
+    inputs:
+      SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
+      Contents: '**'
 
-    # Package
+  # Package Task
 
-    - task: Npm@1
-      displayName: Install NPM Production Packages - CreateCosmosDbCollection
-      inputs:
-        command: 'custom'
-        verbose: 'false'
-        workingDir: 'src/CreateCosmosDbCollection'
-        customCommand: 'install --only=production'
+  - task: Npm@1
+    displayName: Install NPM Production Packages - CreateCosmosDbCollection
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      workingDir: 'src/CreateCosmosDbCollection'
+      customCommand: 'install --only=production'
 
-    - task: CopyFiles@2
-      displayName: Copy Task Manifest - CreateCosmosDbCollection
-      inputs:
-        SourceFolder: 'src/CreateCosmosDbCollection'
-        Contents: 'task.json'
-        TargetFolder: 'output/CreateCosmosDbCollection'
+  - task: CopyFiles@2
+    displayName: Copy Task Manifest - CreateCosmosDbCollection
+    inputs:
+      SourceFolder: 'src/CreateCosmosDbCollection'
+      Contents: 'task.json'
+      TargetFolder: 'output/CreateCosmosDbCollection'
 
-    - task: CopyFiles@2
-      displayName: Copy NPM Packages - CreateCosmosDbCollection
-      inputs:
-        SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
-        Contents: '**\*'
-        TargetFolder: 'output/CreateCosmosDbCollection/node_modules'
-    
-    - task: Npm@1
-      displayName: Package Extension to VSIX File
-      inputs:
-        command: 'custom'
-        verbose: 'false'
-        customCommand: 'run package'
-    
-    - task: PublishBuildArtifacts@1
-      displayName: Publish VSIX File
-      inputs:
-        pathToPublish: output/publish
-        artifactName: drop
-        artifactType: container
+  - task: CopyFiles@2
+    displayName: Copy NPM Packages - CreateCosmosDbCollection
+    inputs:
+      SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
+      Contents: '**\*'
+      TargetFolder: 'output/CreateCosmosDbCollection/node_modules'
+  
+  # Package VSIX
+
+  - task: Npm@1
+    displayName: Package Extension to VSIX File
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      customCommand: 'run package'
+  
+  - task: PublishBuildArtifacts@1
+    displayName: Publish VSIX File
+    inputs:
+      pathToPublish: output/publish
+      artifactName: drop
+      artifactType: container
