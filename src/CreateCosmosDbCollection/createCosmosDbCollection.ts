@@ -1,7 +1,7 @@
 import task = require('vsts-task-lib/task');
 import toolRunnerModule = require('vsts-task-lib/toolrunner');
 import { DocumentClient, UriFactory, UniqueId, CollectionPartitionKey, Collection } from 'documentdb';
-var client: DocumentClient = require('documentdb').DocumentClient;
+//var client: DocumentClient = require('documentdb').DocumentClient;
 
 async function run() {
     try {
@@ -26,13 +26,13 @@ async function run() {
         }
 
         // initialise a DocumentClient for connecting to Cosmos DB
-        client = new DocumentClient(accountEndpoint, {
+        var client = new DocumentClient(accountEndpoint, {
             masterKey: accountKey
         });
 
         // try to create the collection
         task.debug(`Attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
-        var collectionCreateResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput, collectionPartitionKey);
+        var collectionCreateResult = await tryCreateCollectionAsync(client, databaseLink, collectionName, collectionThroughput, collectionPartitionKey);
         switch (collectionCreateResult) {
             case CreateCollectionResult.Success:
                 task.debug(`Collection created successfully.`);
@@ -51,11 +51,11 @@ async function run() {
                 }
 
                 task.debug(`Database '${ collectionDatabaseName }' does not exist. Creating database...`);
-                var databaseCreateResult = createDatabaseAsync(collectionDatabaseName);
+                var databaseCreateResult = createDatabaseAsync(client, collectionDatabaseName);
                 
                 task.debug(`Database created.`);
                 task.debug(`Re-attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
-                var collectionCreateRetryResult = await tryCreateCollectionAsync(databaseLink, collectionName, collectionThroughput, collectionPartitionKey);
+                var collectionCreateRetryResult = await tryCreateCollectionAsync(client, databaseLink, collectionName, collectionThroughput, collectionPartitionKey);
                 if (collectionCreateRetryResult == CreateCollectionResult.Success) {
                     task.debug(`Collection created successfully.`);
                 } else {
@@ -70,7 +70,7 @@ async function run() {
     }
 }
 
-async function tryCreateCollectionAsync(databaseLink: string, collectionName: string, collectionThroughput: number, collectionPartitionKey?: string): Promise<CreateCollectionResult> {
+async function tryCreateCollectionAsync(client: DocumentClient, databaseLink: string, collectionName: string, collectionThroughput: number, collectionPartitionKey?: string): Promise<CreateCollectionResult> {
     return new Promise<CreateCollectionResult>(function(resolve, reject) {
 
         var collection: Collection = {
@@ -100,7 +100,7 @@ async function tryCreateCollectionAsync(databaseLink: string, collectionName: st
         });
 }
 
-async function createDatabaseAsync(databaseName: string) {
+async function createDatabaseAsync(client: DocumentClient, databaseName: string) {
     return new Promise(function(resolve, reject) {
         client.createDatabase({ id: databaseName }, 
             (error, resource, responseHeaders) => {

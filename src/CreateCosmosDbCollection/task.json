@@ -40,7 +40,7 @@
       "groupName": "connection"
     },
     {
-      "name": "connectionKey",
+      "name": "connectionAccountKey",
       "type": "string",
       "label": "Cosmos DB account key or SAS token",
       "required": true,
@@ -49,11 +49,11 @@
       "groupName": "connection"
     },
     {
-      "name": "collectionAccountName",
+      "name": "collectionAccountEndpoint",
       "type": "string",
-      "label": "Cosmos DB account name",
+      "label": "Cosmos DB account endpoint",
       "required": true,
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "TODO include .documents.azure.com",
       "groupName": "collection"
     },
     {
