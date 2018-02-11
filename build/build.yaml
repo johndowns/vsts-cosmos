@@ -4,8 +4,8 @@ name: $(BuildID)
 
 phases:
 
-- phase: Build and Package
-  displayName: Build and Package
+- phase: Build
+  displayName: Build
   queue:
     name: Hosted VS2017
     demands:
