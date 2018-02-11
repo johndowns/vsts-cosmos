@@ -10,9 +10,9 @@
   ],
   "demands": [],
   "version": {
-    "Major": "0",
-    "Minor": "0",
-    "Patch": "1"
+    "Major": "#{MajorVersion}#",
+    "Minor": "#{MinorVersion}#",
+    "Patch": "#{RevisionVersion}#"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Create Cosmos DB Collection $(message)",
