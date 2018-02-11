@@ -1,7 +1,6 @@
 import task = require('vsts-task-lib/task');
 import toolRunnerModule = require('vsts-task-lib/toolrunner');
 import { DocumentClient, UriFactory, UniqueId, CollectionPartitionKey, Collection } from 'documentdb';
-//var client: DocumentClient = require('documentdb').DocumentClient;
 
 async function run() {
     try {
@@ -15,14 +14,26 @@ async function run() {
         let collectionPartitionKey = task.getInput("collectionPartitionKey");
         let collectionCreateDatabaseIfNotExists = task.getBoolInput("collectionCreateDatabaseIfNotExists", true);
         let failIfExists = task.getBoolInput("failIfExists", true);
+
         let databaseLink = UriFactory.createDatabaseUri(collectionDatabaseName);
 
         // validate the inputs
-        // TODO validate conditionally required fields
         let collectionThroughput = Number(collectionThroughputInput);
         if (isNaN(collectionThroughput)) {
-            throw new Error('Collection throughput must be a number.');
-            // TODO test this
+            throw new Error("Collection throughput must be a number.");
+        } else if (collectionThroughput < 1000) {
+            throw new Error("Collection throughput must be at least 1000 RU/s.");
+            // TODO test
+        }
+
+        if (collectionStorageCapacity != "fixed" && collectionStorageCapacity != "unlimited") {
+            throw new Error("Collection storage capacity must either be 'Fixed' or 'Unlimited'.")
+            // TODO can we test this?
+        }
+        
+        if (collectionStorageCapacity == "unlimited" && (collectionPartitionKey == undefined) || (collectionPartitionKey == "")) {
+            throw new Error("A partition key must be specified for unlimited collections.");
+            // TODo can we test this?
         }
 
         // initialise a DocumentClient for connecting to Cosmos DB
