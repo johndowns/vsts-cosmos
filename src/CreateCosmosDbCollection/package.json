@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -p tsconfig.build.json",
+    "test": "tsc && mocha tests/_suite.js"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -9,8 +10,10 @@
   },
   "devDependencies": {
     "@types/documentdb": "^1.10.4",
+    "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.0",
     "@types/q": "^1.0.7",
+    "mocha": "^5.0.0",
     "typescript": "~2.6.2"
   }
 }

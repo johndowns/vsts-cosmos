@@ -26,13 +26,23 @@ steps:
     inputs:
       verbose: 'false'
 
-  # Build
-
   - task: Npm@1
     displayName: Install NPM Packages - CreateCosmosDbCollection
     inputs:
       verbose: 'false'
       workingDir: 'src/CreateCosmosDbCollection'
+
+  # Test
+  
+  - task: Npm@1
+    displayName: Run Test Script - CreateCosmosDbCollection
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      workingDir: 'src/CreateCosmosDbCollection'
+      customCommand: 'run test'
+
+  # Build
 
   - task: Npm@1
     displayName: Run Build Script - CreateCosmosDbCollection

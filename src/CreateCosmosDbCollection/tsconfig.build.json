@@ -1,0 +1,14 @@
+{
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "tests/**/*.ts"
+  ],
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "../../output/CreateCosmosDbCollection"
+  }
+}

@@ -1,3 +1,5 @@
 .taskkey
 output/
 node_modules/
+src/**/*.js
+*.map
