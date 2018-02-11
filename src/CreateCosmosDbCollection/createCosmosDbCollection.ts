@@ -1,6 +1,5 @@
 import task = require('vsts-task-lib/task');
 import toolRunnerModule = require('vsts-task-lib/toolrunner');
-//import { DocumentClient, UriFactory, UniqueId, CollectionPartitionKey, Collection } from 'documentdb';
 import * as cosmos from './cosmosDb'
 
 async function run() {
