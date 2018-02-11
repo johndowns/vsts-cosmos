@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "cosmos-db-tasks",
   "name": "Cosmos DB VSTS Release Tasks",
-  "version": "0.0.#{Build.BuildID}#",
+  "version": "#{MajorVersion}#.#{MinorVersion}#.#{RevisionVersion}#",
   "publisher": "johndowns",
   "targets": [
     {

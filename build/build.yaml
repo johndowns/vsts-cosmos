@@ -16,9 +16,9 @@ phases:
     # Build
 
     - task: qetza.replacetokens.replacetokens-task.replacetokens@2
-      displayName: Update Extension Version with Build ID
+      displayName: Update Variables in JSON Files
       inputs:
-        targetFiles: 'vss-extension.json'
+        targetFiles: '**/*.json'
         actionOnMissing: 'fail'
 
     - task: Npm@1
