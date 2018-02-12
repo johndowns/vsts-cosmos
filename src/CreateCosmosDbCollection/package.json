@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "tsc && mocha tests/_suite.js"
+    "test": "tsc && mocha tests/_suite.js",
+    "vststest": "tsc && mocha tests/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=../test-output/test-results.xml"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -14,6 +15,7 @@
     "@types/node": "^9.4.0",
     "@types/q": "^1.0.7",
     "mocha": "^5.0.0",
+    "mocha-junit-reporter": "^1.17.0",
     "typescript": "~2.6.2"
   }
 }

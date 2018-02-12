@@ -21,7 +21,7 @@
   "instanceNameFormat": "Create Cosmos DB Collection $(message)",
   "inputs": [
     {
-      "name": "connectionAccountKey",
+      "name": "collectionAccountKey",
       "type": "string",
       "label": "Cosmos DB account key or SAS token",
       "required": true,

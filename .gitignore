@@ -3,3 +3,4 @@ output/
 node_modules/
 src/**/*.js
 *.map
+test-output/

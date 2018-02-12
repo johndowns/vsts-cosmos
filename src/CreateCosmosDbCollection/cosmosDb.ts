@@ -36,12 +36,12 @@ export async function tryCreateCollectionAsync(accountEndpoint: string, accountK
         });
 }
 
-export async function createDatabaseAsync(accountEndpoint: string, accountKey: string, databaseName: string) {
+export async function createDatabaseAsync(accountEndpoint: string, accountKey: string, databaseName: string): Promise<void> {
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
 
-    return new Promise(function(resolve, reject) {
+    return new Promise<void>(function(resolve, reject) {
         client.createDatabase({ id: databaseName }, 
             (error, resource, responseHeaders) => {
                 if (! error) {
