@@ -21,19 +21,17 @@ async function run() {
             throw new Error("Collection throughput must be a number.");
         } else if (collectionThroughput < 1000) {
             throw new Error("Collection throughput must be at least 1000 RU/s.");
-            // TODO test
         }
 
         if (collectionStorageCapacity != "fixed" && collectionStorageCapacity != "unlimited") {
             throw new Error("Collection storage capacity must either be 'Fixed' or 'Unlimited'.")
-            // TODO can we test this?
         }
         
         if (collectionStorageCapacity == "unlimited" && (collectionPartitionKey == undefined) || (collectionPartitionKey == "")) {
             throw new Error("A partition key must be specified for unlimited collections.");
-            // TODo can we test this?
         }
 
+        // run the main logic
         await runImpl(accountEndpoint, accountKey, collectionDatabaseName, collectionName, collectionThroughput, collectionPartitionKey, failIfExists, collectionCreateDatabaseIfNotExists);
 
         task.setResult(task.TaskResult.Succeeded, null);
