@@ -1,6 +1,6 @@
 import { DocumentClient, UriFactory, UniqueId, CollectionPartitionKey, Collection } from 'documentdb';
 
-export async function tryCreateCollectionAsync(accountEndpoint: string, accountKey: string, databaseName: string, collectionName: string, collectionThroughput: number, collectionPartitionKey?: string): Promise<CreateCollectionResult> {
+export async function tryCreateCollectionAsync(accountEndpoint: string, accountKey: string, databaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey?: string): Promise<CreateCollectionResult> {
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
@@ -15,6 +15,7 @@ export async function tryCreateCollectionAsync(accountEndpoint: string, accountK
             kind: "Hash"
         };
     }
+    // TODO collectionStorageCapacity
 
     let databaseLink = UriFactory.createDatabaseUri(databaseName);
 
