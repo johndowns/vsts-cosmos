@@ -63,7 +63,7 @@ async function runImpl(accountEndpoint: string, accountKey: string, collectionDa
             }
 
             console.log(`Database '${ collectionDatabaseName }' does not exist. Creating database...`);
-            var databaseCreateResult = cosmos.createDatabaseAsync(accountEndpoint, accountKey, collectionDatabaseName);
+            var databaseCreateResult = await cosmos.createDatabaseAsync(accountEndpoint, accountKey, collectionDatabaseName);
             
             console.log(`Database created.`);
             console.log(`Re-attempting to create collection '${ collectionName }' in database '${ collectionDatabaseName }'...`);
