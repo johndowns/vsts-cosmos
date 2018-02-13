@@ -11,7 +11,6 @@ tmr.setInput('collectionAccountKey', 'key');
 tmr.setInput('collectionDatabaseName', 'db');
 tmr.setInput('collectionName', 'coll');
 tmr.setInput('collectionThroughput', '1000');
-tmr.setInput('collectionPartitionKey', undefined);
 tmr.setInput('collectionStorageCapacity', 'unlimited');
 tmr.setInput('collectionCreateDatabaseIfNotExists', 'true');
 tmr.setInput('failIfExists', 'true');
