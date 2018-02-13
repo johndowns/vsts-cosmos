@@ -14,7 +14,7 @@ async function run() {
         let collectionPartitionKey = task.getInput("collectionPartitionKey");
         let collectionCreateDatabaseIfNotExists = task.getBoolInput("collectionCreateDatabaseIfNotExists", true);
         let failIfExists = task.getBoolInput("failIfExists", true);
-
+        
         // validate the inputs
         let collectionThroughput = Number(collectionThroughputInput);
         if (isNaN(collectionThroughput)) {
@@ -22,7 +22,7 @@ async function run() {
         } else if (collectionThroughput < 1000) {
             throw new Error("Collection throughput must be at least 1000 RU/s.");
         }
-
+        
         if (collectionStorageCapacity != "fixed" && collectionStorageCapacity != "unlimited") {
             throw new Error("Collection storage capacity must either be 'Fixed' or 'Unlimited'.")
         }
@@ -45,15 +45,15 @@ async function run() {
 
 async function runImpl(accountEndpoint: string, accountKey: string, collectionDatabaseName: string, collectionName: string, collectionThroughput: number, collectionPartitionKey: string, failIfExists: boolean, collectionCreateDatabaseIfNotExists: boolean) {
     // try to create the collection
-    task.debug(`Attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
+    console.log(`Attempting to create collection '${collectionName}' in database '${collectionDatabaseName}'...`);
     var collectionCreateResult = await cosmos.tryCreateCollectionAsync(accountEndpoint, accountKey, collectionDatabaseName, collectionName, collectionThroughput, collectionPartitionKey);
     switch (collectionCreateResult) {
         case cosmos.CreateCollectionResult.Success:
-            task.debug(`Collection created successfully.`);
+            console.log(`Collection created successfully.`);
             break;
 
         case cosmos.CreateCollectionResult.CollectionAlreadyExists:
-            task.debug(`Collection already exists.`);
+            console.log(`Collection already exists.`);
             if (failIfExists) {
                 throw new Error(`Collection ${ collectionName } already exists.`);
             }
@@ -64,14 +64,14 @@ async function runImpl(accountEndpoint: string, accountKey: string, collectionDa
                 throw new Error(`Database ${ collectionDatabaseName } does not exist.`);
             }
 
-            task.debug(`Database '${ collectionDatabaseName }' does not exist. Creating database...`);
+            console.log(`Database '${ collectionDatabaseName }' does not exist. Creating database...`);
             var databaseCreateResult = cosmos.createDatabaseAsync(accountEndpoint, accountKey, collectionDatabaseName);
             
-            task.debug(`Database created.`);
-            task.debug(`Re-attempting to create collection '${ collectionName }' in database '${ collectionDatabaseName }'...`);
+            console.log(`Database created.`);
+            console.log(`Re-attempting to create collection '${ collectionName }' in database '${ collectionDatabaseName }'...`);
             var collectionCreateRetryResult = await cosmos.tryCreateCollectionAsync(accountEndpoint, accountKey, collectionDatabaseName, collectionName, collectionThroughput, collectionPartitionKey);
             if (collectionCreateRetryResult == cosmos.CreateCollectionResult.Success) {
-                task.debug(`Collection created successfully.`);
+                console.log(`Collection created successfully.`);
             } else {
                 throw new Error(`Cannot create collection ${ collectionName }. Second attempt resulted in error: ${ collectionCreateRetryResult }`);
             }
