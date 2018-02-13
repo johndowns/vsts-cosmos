@@ -55,7 +55,7 @@ export async function createDatabaseAsync(accountEndpoint: string, accountKey: s
 }
 
 export const enum CreateCollectionResult {
-    Success,
-    CollectionAlreadyExists,
-    DatabaseDoesNotExist
+    Success = "Success",
+    CollectionAlreadyExists = "CollectionAlreadyExists",
+    DatabaseDoesNotExist = "DatabaseDoesNotExist"
 }

@@ -33,6 +33,7 @@ tmr.registerMock('./cosmosDb', {
     createDatabaseAsync: function(accountEndpoint: string, accountKey: string, databaseName: string): Promise<void>  {
         return new Promise<void>(function(resolve, reject) {
             databaseExists = false;
+            resolve();
         });
     }
 });
