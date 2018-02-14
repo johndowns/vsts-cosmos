@@ -3,6 +3,7 @@
   "name": "CreateCosmosDbCollection",
   "friendlyName": "Create Cosmos DB Collection",
   "description": "Creates a Cosmos DB collection.",
+  "helpMarkDown": "TODO",
   "author": "John Downs",
   "category": "Utility",
   "icons": {
@@ -21,19 +22,19 @@
   "instanceNameFormat": "Create Cosmos DB Collection $(message)",
   "inputs": [
     {
-      "name": "collectionAccountKey",
+      "name": "accountKey",
       "type": "string",
       "label": "Cosmos DB account key or SAS token",
       "required": true,
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "The key that should be used to communicate with Cosmos DB. This can be obtained from the Azure Portal.",
       "groupName": "connection"
     },
     {
-      "name": "collectionAccountEndpoint",
+      "name": "accountName",
       "type": "string",
-      "label": "Cosmos DB account endpoint",
+      "label": "Cosmos DB account name",
       "required": true,
-      "helpMarkDown": "TODO include .documents.azure.com",
+      "helpMarkDown": "The name of the Cosmos DB account. This should not include the `.documents.azure.com` suffix.",
       "groupName": "collection"
     },
     {
@@ -45,7 +46,7 @@
       "groupName": "collection"
     },
     {
-      "name": "collectionDatabaseName",
+      "name": "databaseName",
       "type": "string",
       "label": "Database name",
       "required": true,
@@ -83,19 +84,19 @@
       "groupName": "collection"
     },
     {
-      "name": "collectionCreateDatabaseIfNotExists",
+      "name": "databaseCreateIfNotExists",
       "type": "boolean",
       "label": "Create database if it doesn't already exist",
       "defaultValue": true,
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "If this is selected, the task will create the database if it does not already exist. If this is not selected and the database does not exist, the task will fail.",
       "groupName": "advanced"
     },
     {
-      "name": "failIfExists",
+      "name": "collectionFailIfExists",
       "type": "boolean",
       "label": "Fail if collection already exists",
       "defaultValue": false,
-      "helpMarkDown": "If this is selected, the task will fail the release if the collection already exists. If this is not selected, the task will ignore a collection if it already exists, and will not adjust the collection in any way.",
+      "helpMarkDown": "If this is selected, the task will fail if the collection already exists. If this is not selected, the task will ignore a collection if it already exists, and will not adjust the collection in any way.",
       "groupName": "advanced"
     }
   ],

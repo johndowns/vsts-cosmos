@@ -5,15 +5,15 @@ import * as cosmos from './cosmosDb'
 async function run() {
     try {
         // get the inputs
-        let accountEndpoint = task.getInput("collectionAccountEndpoint", true);
-        let accountKey = task.getInput("collectionAccountKey", true);
+        let accountEndpoint = task.getInput("accountEndpoint", true);
+        let accountKey = task.getInput("accountKey", true);
         let collectionName = task.getInput("collectionName", true);
-        let collectionDatabaseName = task.getInput("collectionDatabaseName", true);
+        let databaseName = task.getInput("databaseName", true);
         let collectionThroughputInput = task.getInput("collectionThroughput", true);
         let collectionStorageCapacity = task.getInput("collectionStorageCapacity", true);
         let collectionPartitionKey = task.getInput("collectionPartitionKey");
-        let collectionCreateDatabaseIfNotExists = task.getBoolInput("collectionCreateDatabaseIfNotExists", true);
-        let failIfExists = task.getBoolInput("failIfExists", true);
+        let databaseCreateIfNotExists = task.getBoolInput("databaseCreateIfNotExists", true);
+        let collectionFailIfExists = task.getBoolInput("collectionFailIfExists", true);
 
         // validate the inputs
         let collectionThroughput = Number(collectionThroughputInput);
@@ -32,7 +32,7 @@ async function run() {
         }
 
         // run the main logic
-        await runImpl(accountEndpoint, accountKey, collectionDatabaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, failIfExists, collectionCreateDatabaseIfNotExists);
+        await runImpl(accountEndpoint, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, collectionFailIfExists, databaseCreateIfNotExists);
 
         task.setResult(task.TaskResult.Succeeded, null);
     }
@@ -41,29 +41,32 @@ async function run() {
     }
 }
 
-async function runImpl(accountEndpoint: string, accountKey: string, collectionDatabaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, failIfExists: boolean, collectionCreateDatabaseIfNotExists: boolean) {
-    console.log(`Checking if database '${collectionDatabaseName}' exists...`);
-    var databaseExists = await cosmos.databaseExistsAsync(accountEndpoint, accountKey, collectionDatabaseName);
+async function runImpl(accountEndpoint: string, accountKey: string, databaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, collectionFailIfExists: boolean, databaseCreateIfNotExists: boolean) {
+    console.log(`Checking if database '${databaseName}' exists...`);
+    var databaseExists = await cosmos.databaseExistsAsync(accountEndpoint, accountKey, databaseName);
     if (! databaseExists) {
-        if (! collectionCreateDatabaseIfNotExists) {
+        if (! databaseCreateIfNotExists) {
             throw new Error('Database does not exist.');
         }
 
         console.log('Database does not exist. Creating...');
-        await cosmos.createDatabaseAsync(accountEndpoint, accountKey, collectionDatabaseName);
+        await cosmos.createDatabaseAsync(accountEndpoint, accountKey, databaseName);
+    }
+    else {
+        console.log('Database exists.');
     }
 
     console.log(`Checking if collection '${collectionName}' exists...`);
-    var collectionExists = await cosmos.collectionExistsAsync(accountEndpoint, accountKey, collectionDatabaseName, collectionName);
+    var collectionExists = await cosmos.collectionExistsAsync(accountEndpoint, accountKey, databaseName, collectionName);
     if (! collectionExists) {
         console.log('Collection does not exist. Creating...')
-        await cosmos.createCollectionAsync(accountEndpoint, accountKey, collectionDatabaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
+        await cosmos.createCollectionAsync(accountEndpoint, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
     }
     else {
-        if (failIfExists) {
+        if (collectionFailIfExists) {
             throw new Error(`Collection ${ collectionName } already exists.`);
         } else {
-            console.log('Collection already exists.');
+            console.log('Collection exists.');
         }
     }
 }
