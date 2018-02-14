@@ -87,7 +87,7 @@ export async function createCollectionAsync(
     collectionStorageCapacity: string,
     collectionThroughput: number,
     collectionPartitionKey?: string)
-    : Promise<CreateCollectionResult> {
+    : Promise<void> {
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
@@ -105,22 +105,16 @@ export async function createCollectionAsync(
 
     let databaseLink = UriFactory.createDatabaseUri(databaseName);
 
-    return new Promise<CreateCollectionResult>(function(resolve, reject) {
+    return new Promise<void>(function(resolve, reject) {
         client.createCollection(databaseLink, 
             collection,
             { offerThroughput: collectionThroughput },
             (error, resource, responseHeaders) => {
                 if (resource) {
-                    resolve(CreateCollectionResult.Success);
+                    resolve();
                 } else {
                     reject(`Create collection operation failed with error code '${error.code}', body '${error}'.`);
                 }
             });
         });
-}
-
-export const enum CreateCollectionResult {
-    Success = "Success",
-    CollectionAlreadyExists = "CollectionAlreadyExists",
-    DatabaseDoesNotExist = "DatabaseDoesNotExist"
 }
