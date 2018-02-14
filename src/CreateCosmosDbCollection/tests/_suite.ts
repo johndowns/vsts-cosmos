@@ -159,6 +159,21 @@ describe('CreateCosmosDbCollection task', function () {
         done();
     });
 
+    it('should fail when database does not exist', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'fail-databaseDoesNotExist.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(! tr.succeeded, 'should have failed');
+        assert.equal(tr.warningIssues.length, 0, "should have no warnings");
+        assert.equal(tr.errorIssues.length, 1, "should have one errors");
+
+        done();
+    });
+
     it('should fail when database not created', (done: MochaDone) => {
         this.timeout(1000);
 
