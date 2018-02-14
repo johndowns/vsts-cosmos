@@ -15,7 +15,6 @@ tmr.setInput('collectionStorageCapacity', 'unlimited');
 tmr.setInput('collectionCreateDatabaseIfNotExists', 'true');
 tmr.setInput('failIfExists', 'true');
 
-// mock a specific module function called in task 
 tmr.registerMock('./cosmosDb', {
     databaseExistsAsync: function(accountEndpoint: string, accountKey: string, databaseName: string): Promise<boolean> {
         return new Promise<boolean>(function(resolve, reject) {

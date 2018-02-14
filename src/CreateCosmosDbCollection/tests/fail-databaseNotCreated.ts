@@ -29,6 +29,4 @@ tmr.registerMock('./cosmosDb', {
     }
 });
 
-
-
 tmr.run();
