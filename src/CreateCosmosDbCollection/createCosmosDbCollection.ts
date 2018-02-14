@@ -57,7 +57,7 @@ async function runImpl(accountEndpoint: string, accountKey: string, collectionDa
     var collectionExists = await cosmos.collectionExistsAsync(accountEndpoint, accountKey, collectionDatabaseName, collectionName);
     if (! collectionExists) {
         console.log('Collection does not exist. Creating...')
-        cosmos.createCollectionAsync(accountEndpoint, accountKey, collectionDatabaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
+        await cosmos.createCollectionAsync(accountEndpoint, accountKey, collectionDatabaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
     }
     else {
         if (failIfExists) {
