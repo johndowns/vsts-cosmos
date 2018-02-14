@@ -14,16 +14,12 @@
     "Build and release"
   ],
   "icons": {
-    "default": "icons/icon-128.png"
+    "default": "icon.png"
   },
   "files": [
     {
       "path": "output/CreateCosmosDbCollection",
       "packagePath": "CreateCosmosDbCollection"
-    },
-    {
-      "path": "icons",
-      "packagePath": "icons"
     }
   ],
   "contributions": [

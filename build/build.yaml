@@ -82,6 +82,13 @@ steps:
       TargetFolder: 'output/CreateCosmosDbCollection'
 
   - task: CopyFiles@2
+    displayName: Copy Task Icon - CreateCosmosDbCollection
+    inputs:
+      SourceFolder: 'src/CreateCosmosDbCollection'
+      Contents: 'icon.png'
+      TargetFolder: 'output/CreateCosmosDbCollection'
+
+  - task: CopyFiles@2
     displayName: Copy NPM Packages - CreateCosmosDbCollection
     inputs:
       SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
