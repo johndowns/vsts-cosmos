@@ -6,7 +6,7 @@
   "author": "John Downs",
   "category": "Utility",
   "icons": {
-    "default": "../icon-32.png"
+    "default": "../icons/icon-32.png"
   },
   "visibility": [
     "Release"
