@@ -1,7 +1,6 @@
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import { DocumentClient } from 'documentdb';
-import { CreateCollectionResult } from '../cosmosDb'
 
 let taskPath = path.join(__dirname, '..', 'createCosmosDbCollection.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
