@@ -28,10 +28,7 @@ async function run() {
             var subscriptionName: string = task.getEndpointDataParameter(connectedService, "SubscriptionName", true);
             var subscriptionId: string = task.getEndpointDataParameter(connectedService, "SubscriptionId", true);
 
-            console.log("TODO");
-            console.log(subscriptionName);
-            console.log(subscriptionId);
-            console.log("TODO");
+            console.log(`Retrieving key for Cosmos DB account '${accountName}'...`);
             accountKey = await azureRm.getCosmosDbAccountKey(servicePrincipalClientId, servicePrincipalClientSecret, tenantId, subscriptionId, resourceGroupName, accountName);
             // TODO exceptions in here aren't getting treated as failures
         } else if (authenticationType == "key") {

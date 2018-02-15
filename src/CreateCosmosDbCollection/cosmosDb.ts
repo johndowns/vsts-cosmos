@@ -1,10 +1,11 @@
 import { DocumentClient, UriFactory, UniqueId, CollectionPartitionKey, Collection } from 'documentdb';
 
 export async function databaseExistsAsync(
-    accountEndpoint: string,
+    accountName: string,
     accountKey: string, 
     databaseName: string)
     : Promise<boolean> {
+    var accountEndpoint = accountName + ".documents.azure.com";
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
@@ -30,10 +31,12 @@ export async function databaseExistsAsync(
 }
 
 export async function createDatabaseAsync(
-    accountEndpoint: string,
+    accountName: string,
     accountKey: string,
     databaseName: string)
     : Promise<void> {
+    var accountEndpoint = accountName + ".documents.azure.com";
+
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
@@ -51,11 +54,13 @@ export async function createDatabaseAsync(
 }
 
 export async function collectionExistsAsync(
-    accountEndpoint: string,
+    accountName: string,
     accountKey: string, 
     databaseName: string,
     collectionName: string)
     : Promise<boolean> {
+    var accountEndpoint = accountName + ".documents.azure.com";
+
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
@@ -80,7 +85,7 @@ export async function collectionExistsAsync(
 }
 
 export async function createCollectionAsync(
-    accountEndpoint: string,
+    accountName: string,
     accountKey: string,
     databaseName: string,
     collectionName: string,
@@ -88,6 +93,8 @@ export async function createCollectionAsync(
     collectionThroughput: number,
     collectionPartitionKey?: string)
     : Promise<void> {
+    var accountEndpoint = accountName + ".documents.azure.com";
+
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
