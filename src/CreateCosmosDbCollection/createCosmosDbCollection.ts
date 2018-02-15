@@ -32,7 +32,8 @@ async function run() {
             console.log(subscriptionName);
             console.log(subscriptionId);
             console.log("TODO");
-            accountKey = await azureRm.getCosmosDbAccountKey(servicePrincipalClientId, servicePrincipalClientSecret, tenantId, subscriptionName, resourceGroupName, accountName);
+            accountKey = await azureRm.getCosmosDbAccountKey(servicePrincipalClientId, servicePrincipalClientSecret, tenantId, subscriptionId, resourceGroupName, accountName);
+            // TODO exceptions in here aren't getting treated as failures
         } else if (authenticationType == "key") {
             if ((accountKey == undefined) || (accountKey == "")) {
                 throw new Error("Account key must be specified.");

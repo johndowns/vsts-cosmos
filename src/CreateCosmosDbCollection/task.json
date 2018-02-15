@@ -49,7 +49,7 @@
       "label": "Resource group name",
       "required": true,
       "helpMarkDown": "The name of the resource group that contains the Cosmos DB account.",
-      "visibleRule": "authenticationType = key",
+      "visibleRule": "authenticationType = arm",
       "groupName": "connection"
     },
     {
