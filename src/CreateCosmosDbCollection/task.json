@@ -22,11 +22,43 @@
   "instanceNameFormat": "Create Cosmos DB Collection $(message)",
   "inputs": [
     {
+      "name": "authenticationType",
+      "type": "pickList",
+      "label": "Connection type",
+      "required": true,
+      "defaultValue": "key",
+      "helpMarkDown": "How the task should connect to Cosmos DB.",
+      "options": {
+        "arm": "Azure Resource Manager",
+        "key": "Cosmos DB account key or SAS token"
+      },
+      "groupName": "connection"
+    },
+    {
+      "name": "armService",
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "required": true,
+      "helpMarkDown": "The Azure Resource Manager service connection to use. This must have `Contributor` rights on the Cosmos DB account.",
+      "visibleRule": "authenticationType = arm",
+      "groupName": "connection"
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "string",
+      "label": "Resource group name",
+      "required": true,
+      "helpMarkDown": "The name of the resource group that contains the Cosmos DB account.",
+      "visibleRule": "authenticationType = key",
+      "groupName": "connection"
+    },
+    {
       "name": "accountKey",
       "type": "string",
       "label": "Cosmos DB account key or SAS token",
       "required": true,
       "helpMarkDown": "The key that should be used to communicate with Cosmos DB. This can be obtained from the Azure Portal.",
+      "visibleRule": "authenticationType = key",
       "groupName": "connection"
     },
     {

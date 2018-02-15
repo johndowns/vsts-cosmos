@@ -1,12 +1,14 @@
 import task = require('vsts-task-lib/task');
 import toolRunnerModule = require('vsts-task-lib/toolrunner');
 import * as cosmos from './cosmosDb'
+import * as azureRm from './azureRm'
 
 async function run() {
     try {
         // get the inputs
-        let accountEndpoint = task.getInput("accountEndpoint", true);
-        let accountKey = task.getInput("accountKey", true);
+        let authenticationType = task.getInput("authenticationType", true);
+        let accountName = task.getInput("accountName", true);
+        var accountKey = task.getInput("accountKey");
         let collectionName = task.getInput("collectionName", true);
         let databaseName = task.getInput("databaseName", true);
         let collectionThroughputInput = task.getInput("collectionThroughput", true);
@@ -16,6 +18,29 @@ async function run() {
         let collectionFailIfExists = task.getBoolInput("collectionFailIfExists", true);
 
         // validate the inputs
+        if (authenticationType == "arm") {
+            var resourceGroupName = task.getInput("resourceGroupName", true);
+
+            var connectedService: string = task.getInput("armService", true);
+            var servicePrincipalClientId: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            var servicePrincipalClientSecret: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+            var tenantId: string = task.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+            var subscriptionName: string = task.getEndpointDataParameter(connectedService, "SubscriptionName", true);
+            var subscriptionId: string = task.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+
+            console.log("TODO");
+            console.log(subscriptionName);
+            console.log(subscriptionId);
+            console.log("TODO");
+            accountKey = await azureRm.getCosmosDbAccountKey(servicePrincipalClientId, servicePrincipalClientSecret, tenantId, subscriptionName, resourceGroupName, accountName);
+        } else if (authenticationType == "key") {
+            if ((accountKey == undefined) || (accountKey == "")) {
+                throw new Error("Account key must be specified.");
+            }
+        } else {
+            throw new Error("Authentication type must either be 'Azure Resource Manager' or 'Cosmos DB account key or SAS token'.")
+        }
+
         let collectionThroughput = Number(collectionThroughputInput);
         if (isNaN(collectionThroughput)) {
             throw new Error("Collection throughput must be a number.");
@@ -32,7 +57,7 @@ async function run() {
         }
 
         // run the main logic
-        await runImpl(accountEndpoint, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, collectionFailIfExists, databaseCreateIfNotExists);
+        await runImpl(accountName, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, collectionFailIfExists, databaseCreateIfNotExists);
 
         task.setResult(task.TaskResult.Succeeded, null);
     }
@@ -41,26 +66,26 @@ async function run() {
     }
 }
 
-async function runImpl(accountEndpoint: string, accountKey: string, databaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, collectionFailIfExists: boolean, databaseCreateIfNotExists: boolean) {
+async function runImpl(accountName: string, accountKey: string, databaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, collectionFailIfExists: boolean, databaseCreateIfNotExists: boolean) {
     console.log(`Checking if database '${databaseName}' exists...`);
-    var databaseExists = await cosmos.databaseExistsAsync(accountEndpoint, accountKey, databaseName);
+    var databaseExists = await cosmos.databaseExistsAsync(accountName, accountKey, databaseName);
     if (! databaseExists) {
         if (! databaseCreateIfNotExists) {
             throw new Error('Database does not exist.');
         }
 
         console.log('Database does not exist. Creating...');
-        await cosmos.createDatabaseAsync(accountEndpoint, accountKey, databaseName);
+        await cosmos.createDatabaseAsync(accountName, accountKey, databaseName);
     }
     else {
         console.log('Database exists.');
     }
 
     console.log(`Checking if collection '${collectionName}' exists...`);
-    var collectionExists = await cosmos.collectionExistsAsync(accountEndpoint, accountKey, databaseName, collectionName);
+    var collectionExists = await cosmos.collectionExistsAsync(accountName, accountKey, databaseName, collectionName);
     if (! collectionExists) {
         console.log('Collection does not exist. Creating...')
-        await cosmos.createCollectionAsync(accountEndpoint, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
+        await cosmos.createCollectionAsync(accountName, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
     }
     else {
         if (collectionFailIfExists) {
