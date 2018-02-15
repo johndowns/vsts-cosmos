@@ -5,7 +5,7 @@ export async function databaseExistsAsync(
     accountKey: string, 
     databaseName: string)
     : Promise<boolean> {
-    var accountEndpoint = accountName + ".documents.azure.com";
+    var accountEndpoint = `https://${accountName}.documents.azure.com`;
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
@@ -35,8 +35,7 @@ export async function createDatabaseAsync(
     accountKey: string,
     databaseName: string)
     : Promise<void> {
-    var accountEndpoint = accountName + ".documents.azure.com";
-
+    var accountEndpoint = `https://${accountName}.documents.azure.com`;
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
@@ -59,7 +58,7 @@ export async function collectionExistsAsync(
     databaseName: string,
     collectionName: string)
     : Promise<boolean> {
-    var accountEndpoint = accountName + ".documents.azure.com";
+    var accountEndpoint = `https://${accountName}.documents.azure.com`;
 
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
@@ -93,7 +92,7 @@ export async function createCollectionAsync(
     collectionThroughput: number,
     collectionPartitionKey?: string)
     : Promise<void> {
-    var accountEndpoint = accountName + ".documents.azure.com";
+    var accountEndpoint = `https://${accountName}.documents.azure.com`;
 
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey

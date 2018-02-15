@@ -67,7 +67,7 @@
       "label": "Cosmos DB account name",
       "required": true,
       "helpMarkDown": "The name of the Cosmos DB account. This should not include the `.documents.azure.com` suffix.",
-      "groupName": "collection"
+      "groupName": "connection"
     },
     {
       "name": "collectionName",
