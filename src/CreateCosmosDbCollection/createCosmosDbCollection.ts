@@ -72,8 +72,9 @@ async function runImpl(accountName: string, accountKey: string, databaseName: st
             throw new Error('Database does not exist.');
         }
 
-        console.log('Database does not exist. Creating...');
+        console.log(`Database '${databaseName}' does not exist. Creating...`);
         await cosmos.createDatabaseAsync(accountName, accountKey, databaseName);
+        console.log('Database created.');
     }
     else {
         console.log('Database exists.');
@@ -82,12 +83,13 @@ async function runImpl(accountName: string, accountKey: string, databaseName: st
     console.log(`Checking if collection '${collectionName}' exists...`);
     var collectionExists = await cosmos.collectionExistsAsync(accountName, accountKey, databaseName, collectionName);
     if (! collectionExists) {
-        console.log('Collection does not exist. Creating...')
+        console.log(`Collection '${ collectionName }' does not exist. Creating...`);
         await cosmos.createCollectionAsync(accountName, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
+        console.log('Collection created.');
     }
     else {
         if (collectionFailIfExists) {
-            throw new Error(`Collection ${ collectionName } already exists.`);
+            throw new Error(`Collection '${ collectionName }' already exists.`);
         } else {
             console.log('Collection exists.');
         }
