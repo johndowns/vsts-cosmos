@@ -5,7 +5,8 @@ import { DocumentClient } from 'documentdb';
 let taskPath = path.join(__dirname, '..', 'createCosmosDbCollection.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('accountEndpoint', 'endpoint');
+tmr.setInput('authenticationType', 'key');
+tmr.setInput('accountName', 'endpoint');
 tmr.setInput('accountKey', 'key');
 tmr.setInput('databaseName', 'db');
 tmr.setInput('collectionName', 'coll');
