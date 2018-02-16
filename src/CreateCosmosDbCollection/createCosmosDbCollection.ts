@@ -19,17 +19,7 @@ async function run() {
 
         // validate the inputs
         if (authenticationType == "arm") {
-            var resourceGroupName = task.getInput("resourceGroupName", true);
-
-            var connectedService: string = task.getInput("armService", true);
-            var servicePrincipalClientId: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-            var servicePrincipalClientSecret: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-            var tenantId: string = task.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-            var subscriptionId: string = task.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-
-            console.log(`Retrieving key for Cosmos DB account '${accountName}'...`);
-            accountKey = await azureRm.getCosmosDbAccountKey(servicePrincipalClientId, servicePrincipalClientSecret, tenantId, subscriptionId, resourceGroupName, accountName);
-            // TODO exceptions in here aren't getting treated as failures
+            accountKey = await getAccountKeyFromArmAsync(accountName);
         } else if (authenticationType == "key") {
             if ((accountKey == undefined) || (accountKey == "")) {
                 throw new Error("Account key must be specified.");
@@ -54,7 +44,7 @@ async function run() {
         }
 
         // run the main logic
-        await runImpl(accountName, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, collectionFailIfExists, databaseCreateIfNotExists);
+        await createCollectionAsync(accountName, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, collectionFailIfExists, databaseCreateIfNotExists);
 
         task.setResult(task.TaskResult.Succeeded, null);
     }
@@ -63,7 +53,27 @@ async function run() {
     }
 }
 
-async function runImpl(accountName: string, accountKey: string, databaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, collectionFailIfExists: boolean, databaseCreateIfNotExists: boolean) {
+async function getAccountKeyFromArmAsync(accountName: string): Promise<string> {
+    try {
+        var resourceGroupName = task.getInput("resourceGroupName", true);
+
+        var connectedService: string = task.getInput("armService", true);
+        var servicePrincipalClientId: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+        var servicePrincipalClientSecret: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        var tenantId: string = task.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+        var subscriptionId: string = task.getEndpointDataParameter(connectedService, "SubscriptionName", true);
+
+        console.log(`Retrieving key for Cosmos DB account '${accountName}'...`);
+        return azureRm.getCosmosDbAccountKey(servicePrincipalClientId, servicePrincipalClientSecret, tenantId, subscriptionId, resourceGroupName, accountName);
+        // TODO exceptions in here aren't getting treated as failures
+    }
+    catch (err) {
+        task.error(err);
+        throw err;
+    }
+}
+
+async function createCollectionAsync(accountName: string, accountKey: string, databaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, collectionFailIfExists: boolean, databaseCreateIfNotExists: boolean) {
     console.log(`Checking if database '${databaseName}' exists...`);
     var databaseExists = await cosmos.databaseExistsAsync(accountName, accountKey, databaseName);
     if (! databaseExists) {
