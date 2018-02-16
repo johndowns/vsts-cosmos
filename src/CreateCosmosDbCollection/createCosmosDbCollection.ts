@@ -25,8 +25,7 @@ async function run() {
             var servicePrincipalClientId: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var servicePrincipalClientSecret: string = task.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
             var tenantId: string = task.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-            var subscriptionName: string = task.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-            var subscriptionId: string = task.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+            var subscriptionId: string = task.getEndpointDataParameter(connectedService, "SubscriptionName", true);
 
             console.log(`Retrieving key for Cosmos DB account '${accountName}'...`);
             accountKey = await azureRm.getCosmosDbAccountKey(servicePrincipalClientId, servicePrincipalClientSecret, tenantId, subscriptionId, resourceGroupName, accountName);
