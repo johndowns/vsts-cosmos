@@ -23,9 +23,11 @@ export async function getCosmosDbAccountKey(
     
                 console.log("4");
                 var client = new CosmosDbManagementClient(credentials, subscriptionId);
-                var keyResponse = await client.databaseAccounts.listKeys(resourceGroupName, accountName);
-                resolve(keyResponse.primaryMasterKey);
                 console.log("5");
+                var keyResponse = await client.databaseAccounts.listKeys(resourceGroupName, accountName);
+                console.log("6");
+                resolve(keyResponse.primaryMasterKey);
+                console.log("7");
             }
         );
     });
