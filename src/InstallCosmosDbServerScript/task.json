@@ -94,9 +94,9 @@
     },
     {
       "name": "scriptFilePath",
-      "type": "string",
+      "type": "filePath",
       "label": "Script file",
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory.",
       "groupName": "script"
     },
     {
