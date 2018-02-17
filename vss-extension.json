@@ -20,6 +20,10 @@
     {
       "path": "output/CreateCosmosDbCollection",
       "packagePath": "CreateCosmosDbCollection"
+    },
+    {
+      "path": "output/InstallCosmosDbServerScript",
+      "packagePath": "InstallCosmosDbServerScript"
     }
   ],
   "contributions": [
@@ -31,6 +35,16 @@
       ],
       "properties": {
         "name": "CreateCosmosDbCollection"
+      }
+    },
+    {
+      "id": "install-cosmos-db-server-script-step",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "InstallCosmosDbServerScript"
       }
     }
   ]
