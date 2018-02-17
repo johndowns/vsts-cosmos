@@ -9,7 +9,7 @@
       "id": "Microsoft.VisualStudio.Services"
     }
   ],
-  "description": "Adds VSTS release tasks for working with Cosmos DB.",
+  "description": "VSTS release tasks for creating Cosmos DB collections, and for installing server-side scripts to Cosmos DB collections.",
   "categories": [
     "Build and release"
   ],
