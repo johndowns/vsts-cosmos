@@ -32,21 +32,21 @@ steps:
 
   # Test
   
-  #- task: Npm@1
-  #  displayName: Run Test Script - CreateCosmosDbCollection
-  #  inputs:
-  #    command: 'custom'
-  #    verbose: 'false'
-  #    workingDir: 'src/CreateCosmosDbCollection'
-  #    customCommand: 'run vststest'
+  - task: Npm@1
+    displayName: Run Test Script - CreateCosmosDbCollection
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      workingDir: 'src/CreateCosmosDbCollection'
+      customCommand: 'run vststest'
 
-  #- task: PublishTestResults@2
-  #  displayName: Publish Test Results
-  #  inputs:
-  #    testRunner: 'JUnit'
-  #    testResultsFiles: 'test-output/test-results.xml'
-  #    searchFolder: '$(Build.SourcesDirectory)'
-  #  condition: always()
+  - task: PublishTestResults@2
+    displayName: Publish Test Results
+    inputs:
+      testRunner: 'JUnit'
+      testResultsFiles: 'test-output/test-results.xml'
+      searchFolder: '$(Build.SourcesDirectory)'
+    condition: always()
 
   # Build
 
