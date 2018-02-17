@@ -1,5 +1,5 @@
 {
-  "id": "a6086ab0-02d1-11e8-a9ef-2bb992338c9d",
+  "id": "502a4942-3800-416b-9d2a-302fa3969bd5",
   "name": "InstallCosmosDbServerScript",
   "friendlyName": "Install Cosmos DB Server Script",
   "description": "Installs a stored procedure, trigger, or user-defined function into a Cosmos DB collection.",
