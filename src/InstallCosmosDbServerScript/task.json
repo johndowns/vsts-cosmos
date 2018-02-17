@@ -1,0 +1,183 @@
+{
+  "id": "a6086ab0-02d1-11e8-a9ef-2bb992338c9d",
+  "name": "InstallCosmosDbServerScript",
+  "friendlyName": "Install Cosmos DB Server Script",
+  "description": "Installs a stored procedure, trigger, or user-defined function into a Cosmos DB collection.",
+  "helpMarkDown": "TODO",
+  "author": "John Downs",
+  "category": "Utility",
+  "icons": {
+    "default": "icon.png"
+  },
+  "visibility": [
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "#{MajorVersion}#",
+    "Minor": "#{MinorVersion}#",
+    "Patch": "#{RevisionVersion}#"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "Install Cosmos DB Server Script $(message)",
+  "inputs": [
+    {
+      "name": "authenticationType",
+      "type": "pickList",
+      "label": "Connection type",
+      "required": true,
+      "defaultValue": "key",
+      "helpMarkDown": "How the task should connect to Cosmos DB.",
+      "options": {
+        "arm": "Azure Resource Manager",
+        "key": "Cosmos DB account key or SAS token"
+      },
+      "groupName": "connection"
+    },
+    {
+      "name": "armService",
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "required": true,
+      "helpMarkDown": "The Azure Resource Manager service connection to use. This must have `Contributor` rights on the Cosmos DB account.",
+      "visibleRule": "authenticationType = arm",
+      "groupName": "connection"
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "string",
+      "label": "Resource group name",
+      "required": true,
+      "helpMarkDown": "The name of the resource group that contains the Cosmos DB account.",
+      "visibleRule": "authenticationType = arm",
+      "groupName": "connection"
+    },
+    {
+      "name": "accountKey",
+      "type": "string",
+      "label": "Cosmos DB account key or SAS token",
+      "required": true,
+      "helpMarkDown": "The key that should be used to communicate with Cosmos DB. This can be obtained from the Azure Portal.",
+      "visibleRule": "authenticationType = key",
+      "groupName": "connection"
+    },
+    {
+      "name": "accountName",
+      "type": "string",
+      "label": "Cosmos DB account name",
+      "required": true,
+      "helpMarkDown": "The name of the Cosmos DB account. This should not include the `.documents.azure.com` suffix.",
+      "groupName": "connection"
+    },
+    {
+      "name": "collectionName",
+      "type": "string",
+      "label": "Collection name",
+      "required": true,
+      "helpMarkDown": "Unique identifier for the collection and used for id-based routing through REST and all SDKs",
+      "groupName": "connection"
+    },
+    {
+      "name": "databaseName",
+      "type": "string",
+      "label": "Database name",
+      "required": true,
+      "helpMarkDown": "The name of the database that contains this collection.",
+      "groupName": "connection"
+    },
+    {
+      "name": "scriptId",
+      "type": "string",
+      "label": "Id",
+      "helpMarkDown": "TODO",
+      "groupName": "script"
+    },
+    {
+      "name": "scriptFilePath",
+      "type": "string",
+      "label": "Script file",
+      "helpMarkDown": "TODO",
+      "groupName": "script"
+    },
+    {
+      "name": "scriptType",
+      "type": "pickList",
+      "label": "Script type",
+      "required": true,
+      "defaultValue": "storedprocedure",
+      "helpMarkDown": "TODO",
+      "options": {
+        "storedprocedure": "Stored Procedure",
+        "trigger": "Trigger",
+        "udf": "User-Defined Function"
+      },
+      "groupName": "script"
+    },
+    {
+      "name": "triggerType",
+      "type": "pickList",
+      "label": "Trigger type",
+      "required": true,
+      "defaultValue": "pre",
+      "helpMarkDown": "TODO",
+      "options": {
+        "pre": "Pre",
+        "post": "Post"
+      },
+      "visibleRule": "scriptType = trigger",
+      "groupName": "script"
+    },
+    {
+      "name": "triggerOperation",
+      "type": "pickList",
+      "label": "Trigger operation",
+      "required": true,
+      "defaultValue": "all",
+      "helpMarkDown": "TODO",
+      "options": {
+        "create": "Create",
+        "delete": "Delete",
+        "replace": "Replace",
+        "all": "All"
+      },
+      "visibleRule": "scriptType = trigger",
+      "groupName": "script"
+    },
+    
+    {
+      "name": "behaviourIfExists",
+      "type": "picklist",
+      "label": "If script already exists",
+      "defaultValue": "replace",
+      "helpMarkDown": "TODO",
+      "options": {
+        "replace": "Replace existing script",
+        "ignore": "Ignore and leave existing script intact",
+        "fail": "Fail the task"
+      },
+      "groupName": "advanced"
+    }
+  ],
+  "groups": [
+    {
+      "name": "connection",
+      "displayName": "Connection to Cosmos DB",
+      "isExpanded": true
+    },
+    {
+      "name": "script",
+      "displayName": "Script",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "installCosmosDbServerScript.js"
+    }
+  }
+}

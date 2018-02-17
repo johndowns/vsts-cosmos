@@ -30,23 +30,31 @@ steps:
       verbose: 'false'
       workingDir: 'src/CreateCosmosDbCollection'
 
+  - task: Npm@1
+    displayName: Install NPM Packages - InstallCosmosDbServerScript
+    inputs:
+      verbose: 'false'
+      workingDir: 'src/InstallCosmosDbServerScript'
+
   # Test
   
-  #- task: Npm@1
-  #  displayName: Run Test Script - CreateCosmosDbCollection
-  #  inputs:
-  #    command: 'custom'
-  #    verbose: 'false'
-  #    workingDir: 'src/CreateCosmosDbCollection'
-  #    customCommand: 'run vststest'
+  - task: Npm@1
+    displayName: Run Test Script - CreateCosmosDbCollection
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      workingDir: 'src/CreateCosmosDbCollection'
+      customCommand: 'run vststest'
 
-  #- task: PublishTestResults@2
-  #  displayName: Publish Test Results
-  #  inputs:
-  #    testRunner: 'JUnit'
-  #    testResultsFiles: 'test-output/test-results.xml'
-  #    searchFolder: '$(Build.SourcesDirectory)'
-  #  condition: always()
+  - task: PublishTestResults@2
+    displayName: Publish Test Results
+    inputs:
+      testRunner: 'JUnit'
+      testResultsFiles: 'test-output/test-results.xml'
+      searchFolder: '$(Build.SourcesDirectory)'
+    condition: always()
+  
+  # TODO test InstallCosmosDbServerScript
 
   # Build
 
@@ -64,6 +72,20 @@ steps:
       SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
       Contents: '**'
 
+  - task: Npm@1
+    displayName: Run Build Script - InstallCosmosDbServerScript
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      workingDir: 'src/InstallCosmosDbServerScript'
+      customCommand: 'run build'
+
+  - task: DeleteFiles@1
+    displayName: Delete NPM Development-Time Packages - InstallCosmosDbServerScript
+    inputs:
+      SourceFolder: 'src/InstallCosmosDbServerScript/node_modules'
+      Contents: '**'
+
   # Package Task
 
   - task: Npm@1
@@ -74,12 +96,27 @@ steps:
       workingDir: 'src/CreateCosmosDbCollection'
       customCommand: 'install --only=production'
 
+  - task: Npm@1
+    displayName: Install NPM Production Packages - InstallCosmosDbServerScript
+    inputs:
+      command: 'custom'
+      verbose: 'false'
+      workingDir: 'src/InstallCosmosDbServerScript'
+      customCommand: 'install --only=production'
+
   - task: CopyFiles@2
     displayName: Copy Task Manifest - CreateCosmosDbCollection
     inputs:
       SourceFolder: 'src/CreateCosmosDbCollection'
       Contents: 'task.json'
       TargetFolder: 'output/CreateCosmosDbCollection'
+
+  - task: CopyFiles@2
+    displayName: Copy Task Manifest - InstallCosmosDbServerScript
+    inputs:
+      SourceFolder: 'src/InstallCosmosDbServerScript'
+      Contents: 'task.json'
+      TargetFolder: 'output/InstallCosmosDbServerScript'
 
   - task: CopyFiles@2
     displayName: Copy Task Icon - CreateCosmosDbCollection
@@ -89,12 +126,26 @@ steps:
       TargetFolder: 'output/CreateCosmosDbCollection'
 
   - task: CopyFiles@2
+    displayName: Copy Task Icon - InstallCosmosDbServerScript
+    inputs:
+      SourceFolder: 'src/InstallCosmosDbServerScript'
+      Contents: 'icon.png'
+      TargetFolder: 'output/InstallCosmosDbServerScript'
+
+  - task: CopyFiles@2
     displayName: Copy NPM Packages - CreateCosmosDbCollection
     inputs:
       SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
       Contents: '**\*'
       TargetFolder: 'output/CreateCosmosDbCollection/node_modules'
   
+  - task: CopyFiles@2
+    displayName: Copy NPM Packages - InstallCosmosDbServerScript
+    inputs:
+      SourceFolder: 'src/InstallCosmosDbServerScript/node_modules'
+      Contents: '**\*'
+      TargetFolder: 'output/InstallCosmosDbServerScript/node_modules'
+
   # Package VSIX
 
   - task: Npm@1
