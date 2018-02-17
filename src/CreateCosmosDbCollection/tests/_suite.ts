@@ -24,16 +24,44 @@ describe('CreateCosmosDbCollection task', function () {
         done();
     });
 
-    it('should not validate when collectionThroughput is less than 1000', (done: MochaDone) => {
+    it('should not validate when collectionStorageCapacity is Unlimited and collectionThroughput is less than 1000', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'validate-collectionThroughputTooLow.js');
+        let tp = path.join(__dirname, 'validate-collectionThroughputTooLowForUnlimitedCollection.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
         assert(! tr.succeeded, 'should have failed');
         assert.equal(tr.errorIssues.length, 1, "should have one error");
+
+        done();
+    });
+
+    it('should not validate when collectionStorageCapacity is Fixed and collectionThroughput is less than 400', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'validate-collectionThroughputTooLowForFixedCollection.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(! tr.succeeded, 'should have failed');
+        assert.equal(tr.errorIssues.length, 1, "should have one error");
+
+        done();
+    });
+
+    it('should validate when collectionStorageCapacity is Fixed and collectionThroughput is greater than 400 and less than 1000', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'validate-collectionThroughputLowForFixedCollection.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
 
         done();
     });

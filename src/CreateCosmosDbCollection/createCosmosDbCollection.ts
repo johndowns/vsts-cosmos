@@ -21,12 +21,16 @@ async function run() {
         let collectionThroughput = Number(collectionThroughputInput);
         if (isNaN(collectionThroughput)) {
             throw new Error("Collection throughput must be a number.");
-        } else if (collectionThroughput < 1000) {
-            throw new Error("Collection throughput must be at least 1000 RU/s.");
         }
         
         if (collectionStorageCapacity != "fixed" && collectionStorageCapacity != "unlimited") {
             throw new Error("Collection storage capacity must either be 'Fixed' or 'Unlimited'.")
+        }
+
+        if (collectionStorageCapacity == "unlimited" && collectionThroughput < 1000) {
+            throw new Error("Collection throughput for 'Unlimited' collections must be at least 1000 RU/s.");
+        } else if (collectionStorageCapacity == "fixed" && collectionThroughput < 400) {
+            throw new Error("Collection throughput for 'Fixed' collections must be at least 400 RU/s.");
         }
         
         if (collectionStorageCapacity == "unlimited" && (collectionPartitionKey == undefined) || (collectionPartitionKey == "")) {
