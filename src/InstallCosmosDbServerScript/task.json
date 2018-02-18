@@ -121,8 +121,8 @@
       "defaultValue": "pre",
       "helpMarkDown": "The type of trigger - i.e. whether the trigger should run before the operation (pre-trigger) or after the operation (post-trigger).",
       "options": {
-        "pre": "Pre",
-        "post": "Post"
+        "Pre": "Pre",
+        "Post": "Post"
       },
       "visibleRule": "scriptType = trigger",
       "groupName": "script"
@@ -135,10 +135,11 @@
       "defaultValue": "all",
       "helpMarkDown": "The type of operation that should cause the trigger to run. Specify `All` for the trigger to be executed on all operations against the collection's documents.",
       "options": {
-        "create": "Create",
-        "delete": "Delete",
-        "replace": "Replace",
-        "all": "All"
+        "All": "All",
+        "Create": "Create",
+        "Update": "Update",
+        "Delete": "Delete",
+        "Replace": "Replace"        
       },
       "visibleRule": "scriptType = trigger",
       "groupName": "script"

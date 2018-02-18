@@ -49,10 +49,10 @@ async function run() {
         // run the main logic
         if (scriptType == "trigger") {
             if (triggerType != "Pre" && triggerType != "Post") {
-                throw new Error("TODO");
+                throw new Error("Trigger type must be either 'Pre' or 'Post.");
             }
             if (triggerOperation != "All" && triggerOperation != "Create" && triggerOperation != "Update" && triggerOperation != "Delete" && triggerOperation != "Replace") {
-                throw new Error("TODO");
+                throw new Error("Trigger operation must be one of 'All', 'Create', 'Update', 'Delete', or 'Replace'.");
             }
             await installCosmosDbServerScript(accountName, accountKey, databaseId, collectionId, scriptId, scriptFilePath, scriptType, triggerType, triggerOperation);
         }
