@@ -66,12 +66,6 @@ steps:
       workingDir: 'src/CreateCosmosDbCollection'
       customCommand: 'run build'
 
-  - task: DeleteFiles@1
-    displayName: Delete NPM Development-Time Packages - CreateCosmosDbCollection
-    inputs:
-      SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
-      Contents: '**'
-
   - task: Npm@1
     displayName: Run Build Script - InstallCosmosDbServerScript
     inputs:
@@ -80,28 +74,19 @@ steps:
       workingDir: 'src/InstallCosmosDbServerScript'
       customCommand: 'run build'
 
-  - task: DeleteFiles@1
-    displayName: Delete NPM Development-Time Packages - InstallCosmosDbServerScript
-    inputs:
-      SourceFolder: 'src/InstallCosmosDbServerScript/node_modules'
-      Contents: '**'
-
   # Package Task
 
-  - task: Npm@1
-    displayName: Install NPM Production Packages - CreateCosmosDbCollection
+  - task: DeleteFiles@1
+    displayName: Delete NPM Development-Time Packages
     inputs:
-      command: 'custom'
-      verbose: 'false'
-      workingDir: 'src/CreateCosmosDbCollection'
-      customCommand: 'install --only=production'
+      SourceFolder: 'node_modules'
+      Contents: '**'
 
   - task: Npm@1
-    displayName: Install NPM Production Packages - InstallCosmosDbServerScript
+    displayName: Install NPM Production Packages
     inputs:
       command: 'custom'
       verbose: 'false'
-      workingDir: 'src/InstallCosmosDbServerScript'
       customCommand: 'install --only=production'
 
   - task: CopyFiles@2
@@ -131,20 +116,6 @@ steps:
       SourceFolder: 'src/InstallCosmosDbServerScript'
       Contents: 'icon.png'
       TargetFolder: 'output/InstallCosmosDbServerScript'
-
-  - task: CopyFiles@2
-    displayName: Copy NPM Packages - CreateCosmosDbCollection
-    inputs:
-      SourceFolder: 'src/CreateCosmosDbCollection/node_modules'
-      Contents: '**\*'
-      TargetFolder: 'output/CreateCosmosDbCollection/node_modules'
-  
-  - task: CopyFiles@2
-    displayName: Copy NPM Packages - InstallCosmosDbServerScript
-    inputs:
-      SourceFolder: 'src/InstallCosmosDbServerScript/node_modules'
-      Contents: '**\*'
-      TargetFolder: 'output/InstallCosmosDbServerScript/node_modules'
 
   # Package VSIX
 
