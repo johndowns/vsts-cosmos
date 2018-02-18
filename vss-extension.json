@@ -18,6 +18,9 @@
   },
   "files": [
     {
+      "path": "node_modules"
+    },
+    {
       "path": "output/CreateCosmosDbCollection",
       "packagePath": "CreateCosmosDbCollection"
     },
