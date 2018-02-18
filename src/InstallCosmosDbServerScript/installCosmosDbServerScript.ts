@@ -47,7 +47,6 @@ async function run() {
         }
 
         // run the main logic
-        console.log('TODO creating...');
         await installCosmosDbServerScript(accountName, accountKey, databaseId, collectionId, scriptId, scriptFilePath, scriptType, triggerType, triggerOperation);
 
         task.setResult(task.TaskResult.Succeeded, null);
@@ -60,11 +59,37 @@ async function run() {
 async function installCosmosDbServerScript(accountName: string, accountKey: string, databaseId: string, collectionId: string, scriptId: string, scriptFilePath: string, scriptType: string, triggerType: string, triggerOperation: string) {
     var scriptFileContents = files.getFileContents(scriptFilePath);
 
-    if (scriptType == "udf") {
-        console.log(`Installing user-defined function '${scriptId}' into collection '${collectionId}' with body '${scriptFileContents}'...`)
-        await cosmos.createUdfAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+    var scriptExists: boolean;
+    switch (scriptType) {
+        case "udf":
+            console.log(`Checking if user-defined function '${scriptId}' exists in collection '${collectionId}'...`);
+            scriptExists = await cosmos.udfExistsAsync(accountName, accountKey, databaseId, collectionId, scriptId);
+            break;
+        default:
+            throw new Error(`Script type ${scriptType} not recognised`);
+    }
+
+    if (! scriptExists)
+    {
+        switch (scriptType) {
+            case "udf":
+                console.log('User-defined function does not exist.');
+                console.log(`Installing user-defined function '${scriptId}' into collection '${collectionId}'...`)
+                await cosmos.createUdfAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+                break;
+            default:
+                throw new Error(`Script type ${scriptType} not recognised`);
+        }
     } else {
-        throw new Error('TODO not supported type');
+        switch (scriptType) {
+            case "udf":
+                console.log('User-defined function already exists.');
+                console.log(`Replacing user-defined function '${scriptId}' in collection '${collectionId}'...`)
+                await cosmos.replaceUdfAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+                break;
+            default:
+                throw new Error(`Script type ${scriptType} not recognised`);
+        }
     }
 }
 
