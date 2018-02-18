@@ -3,14 +3,14 @@ import { DocumentClient, UriFactory, UniqueId, CollectionPartitionKey, Collectio
 export async function databaseExistsAsync(
     accountName: string,
     accountKey: string, 
-    databaseName: string)
+    databaseId: string)
     : Promise<boolean> {
     var accountEndpoint = `https://${accountName}.documents.azure.com`;
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
 
-    let databaseLink = UriFactory.createDatabaseUri(databaseName);
+    let databaseLink = UriFactory.createDatabaseUri(databaseId);
 
     return new Promise<boolean>(function(resolve, reject) {
         client.readDatabase(databaseLink,
@@ -33,7 +33,7 @@ export async function databaseExistsAsync(
 export async function createDatabaseAsync(
     accountName: string,
     accountKey: string,
-    databaseName: string)
+    databaseId: string)
     : Promise<void> {
     var accountEndpoint = `https://${accountName}.documents.azure.com`;
     var client = new DocumentClient(accountEndpoint, {
@@ -41,7 +41,7 @@ export async function createDatabaseAsync(
     });
 
     return new Promise<void>(function(resolve, reject) {
-        client.createDatabase({ id: databaseName }, 
+        client.createDatabase({ id: databaseId }, 
             (error, resource, responseHeaders) => {
                 if (resource) {
                     resolve();
@@ -55,15 +55,15 @@ export async function createDatabaseAsync(
 export async function collectionExistsAsync(
     accountName: string,
     accountKey: string, 
-    databaseName: string,
-    collectionName: string)
+    databaseId: string,
+    collectionId: string)
     : Promise<boolean> {
     var accountEndpoint = `https://${accountName}.documents.azure.com`;
 
     var client = new DocumentClient(accountEndpoint, {
         masterKey: accountKey
     });
-    let collectionLink = UriFactory.createDocumentCollectionUri(databaseName, collectionName);
+    let collectionLink = UriFactory.createDocumentCollectionUri(databaseId, collectionId);
 
     return new Promise<boolean>(function(resolve, reject) {
         client.readCollection(collectionLink,
@@ -86,8 +86,8 @@ export async function collectionExistsAsync(
 export async function createCollectionAsync(
     accountName: string,
     accountKey: string,
-    databaseName: string,
-    collectionName: string,
+    databaseId: string,
+    collectionId: string,
     collectionStorageCapacity: string,
     collectionThroughput: number,
     collectionPartitionKey?: string)
@@ -99,7 +99,7 @@ export async function createCollectionAsync(
     });
 
     var collection: Collection = {
-        id: collectionName
+        id: collectionId
     };
 
     if (collectionPartitionKey) {
@@ -109,7 +109,7 @@ export async function createCollectionAsync(
         };
     }
 
-    let databaseLink = UriFactory.createDatabaseUri(databaseName);
+    let databaseLink = UriFactory.createDatabaseUri(databaseId);
 
     return new Promise<void>(function(resolve, reject) {
         client.createCollection(databaseLink, 

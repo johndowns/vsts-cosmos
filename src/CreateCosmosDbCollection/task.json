@@ -70,19 +70,19 @@
       "groupName": "connection"
     },
     {
-      "name": "collectionName",
+      "name": "collectionId",
       "type": "string",
-      "label": "Collection name",
+      "label": "Collection ID",
       "required": true,
       "helpMarkDown": "Unique identifier for the collection and used for id-based routing through REST and all SDKs",
       "groupName": "collection"
     },
     {
-      "name": "databaseName",
+      "name": "databaseId",
       "type": "string",
-      "label": "Database name",
+      "label": "Database ID",
       "required": true,
-      "helpMarkDown": "The name of the database that should contain this collection.",
+      "helpMarkDown": "The identifier of the database that should contain this collection.",
       "groupName": "collection"
     },
     {

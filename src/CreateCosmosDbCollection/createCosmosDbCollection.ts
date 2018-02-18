@@ -9,8 +9,8 @@ async function run() {
         let authenticationType = task.getInput("authenticationType", true);
         let accountName = task.getInput("accountName", true);
         var accountKey = task.getInput("accountKey");
-        let collectionName = task.getInput("collectionName", true);
-        let databaseName = task.getInput("databaseName", true);
+        let collectionId = task.getInput("collectionId", true);
+        let databaseId = task.getInput("databaseId", true);
         let collectionThroughputInput = task.getInput("collectionThroughput", true);
         let collectionStorageCapacity = task.getInput("collectionStorageCapacity", true);
         let collectionPartitionKey = task.getInput("collectionPartitionKey");
@@ -58,7 +58,7 @@ async function run() {
         }
 
         // run the main logic
-        await createCollectionAsync(accountName, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, collectionFailIfExists, databaseCreateIfNotExists);
+        await createCollectionAsync(accountName, accountKey, databaseId, collectionId, collectionStorageCapacity, collectionThroughput, collectionPartitionKey, collectionFailIfExists, databaseCreateIfNotExists);
 
         task.setResult(task.TaskResult.Succeeded, null);
     }
@@ -67,32 +67,32 @@ async function run() {
     }
 }
 
-async function createCollectionAsync(accountName: string, accountKey: string, databaseName: string, collectionName: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, collectionFailIfExists: boolean, databaseCreateIfNotExists: boolean) {
-    console.log(`Checking if database '${databaseName}' exists...`);
-    var databaseExists = await cosmos.databaseExistsAsync(accountName, accountKey, databaseName);
+async function createCollectionAsync(accountName: string, accountKey: string, databaseId: string, collectionId: string, collectionStorageCapacity: string, collectionThroughput: number, collectionPartitionKey: string, collectionFailIfExists: boolean, databaseCreateIfNotExists: boolean) {
+    console.log(`Checking if database '${databaseId}' exists...`);
+    var databaseExists = await cosmos.databaseExistsAsync(accountName, accountKey, databaseId);
     if (! databaseExists) {
         if (! databaseCreateIfNotExists) {
             throw new Error('Database does not exist.');
         }
 
-        console.log(`Database '${databaseName}' does not exist. Creating...`);
-        await cosmos.createDatabaseAsync(accountName, accountKey, databaseName);
+        console.log(`Database '${databaseId}' does not exist. Creating...`);
+        await cosmos.createDatabaseAsync(accountName, accountKey, databaseId);
         console.log('Database created.');
     }
     else {
         console.log('Database exists.');
     }
 
-    console.log(`Checking if collection '${collectionName}' exists...`);
-    var collectionExists = await cosmos.collectionExistsAsync(accountName, accountKey, databaseName, collectionName);
+    console.log(`Checking if collection '${collectionId}' exists...`);
+    var collectionExists = await cosmos.collectionExistsAsync(accountName, accountKey, databaseId, collectionId);
     if (! collectionExists) {
-        console.log(`Collection '${ collectionName }' does not exist. Creating...`);
-        await cosmos.createCollectionAsync(accountName, accountKey, databaseName, collectionName, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
+        console.log(`Collection '${ collectionId }' does not exist. Creating...`);
+        await cosmos.createCollectionAsync(accountName, accountKey, databaseId, collectionId, collectionStorageCapacity, collectionThroughput, collectionPartitionKey);
         console.log('Collection created.');
     }
     else {
         if (collectionFailIfExists) {
-            throw new Error(`Collection '${ collectionName }' already exists.`);
+            throw new Error(`Collection '${ collectionId }' already exists.`);
         } else {
             console.log('Collection exists.');
         }

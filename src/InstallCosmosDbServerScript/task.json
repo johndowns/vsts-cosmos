@@ -89,7 +89,7 @@
       "name": "scriptId",
       "type": "string",
       "label": "Id",
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "The identifier of the stored procedure, trigger, or user-defined function. This will become the name that is used to invoke the script.",
       "groupName": "script"
     },
     {
@@ -105,7 +105,7 @@
       "label": "Script type",
       "required": true,
       "defaultValue": "storedprocedure",
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "The type of server-side script that should be installed into the collection.",
       "options": {
         "storedprocedure": "Stored Procedure",
         "trigger": "Trigger",
@@ -119,7 +119,7 @@
       "label": "Trigger type",
       "required": true,
       "defaultValue": "pre",
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "The type of trigger - i.e. whether the trigger should run before the operation (pre-trigger) or after the operation (post-trigger).",
       "options": {
         "pre": "Pre",
         "post": "Post"
@@ -133,7 +133,7 @@
       "label": "Trigger operation",
       "required": true,
       "defaultValue": "all",
-      "helpMarkDown": "TODO",
+      "helpMarkDown": "The type of operation that should cause the trigger to run. Specify `All` for the trigger to be executed on all operations against the collection's documents.",
       "options": {
         "create": "Create",
         "delete": "Delete",

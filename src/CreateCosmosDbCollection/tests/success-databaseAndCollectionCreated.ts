@@ -8,8 +8,8 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tmr.setInput('authenticationType', 'key');
 tmr.setInput('accountName', 'endpoint');
 tmr.setInput('accountKey', 'key');
-tmr.setInput('databaseName', 'db');
-tmr.setInput('collectionName', 'coll');
+tmr.setInput('databaseId', 'db');
+tmr.setInput('collectionId', 'coll');
 tmr.setInput('collectionThroughput', '1000');
 tmr.setInput('collectionPartitionKey', 'partitionKey');
 tmr.setInput('collectionStorageCapacity', 'unlimited');
@@ -18,26 +18,26 @@ tmr.setInput('collectionFailIfExists', 'true');
 
 var databaseCreated = false;
 tmr.registerMock('./cosmosDb', {
-    databaseExistsAsync: function(accountEndpoint: string, accountKey: string, databaseName: string): Promise<boolean> {
+    databaseExistsAsync: function(accountEndpoint: string, accountKey: string, databaseId: string): Promise<boolean> {
         return new Promise<boolean>(function(resolve, reject) {
             resolve(databaseCreated);
         });
     },
 
-    createDatabaseAsync: function(accountEndpoint: string, accountKey: string, databaseName: string): Promise<void>  {
+    createDatabaseAsync: function(accountEndpoint: string, accountKey: string, databaseId: string): Promise<void>  {
         return new Promise<void>(function(resolve, reject) {
             databaseCreated = true;
             resolve();
         });
     },
 
-    collectionExistsAsync: function(accountEndpoint: string, accountKey: string, databaseName: string, collectionName: string): Promise<boolean> {
+    collectionExistsAsync: function(accountEndpoint: string, accountKey: string, databaseId: string, collectionId: string): Promise<boolean> {
         return new Promise<boolean>(function(resolve, reject) {
             resolve(false);
         });
     },
 
-    createCollectionAsync: function(accountEndpoint: string, accountKey: string, databaseName: string, collectionName: string, collectionThroughput: number, collectionPartitionKey?: string): Promise<void>  {
+    createCollectionAsync: function(accountEndpoint: string, accountKey: string, databaseId: string, collectionId: string, collectionThroughput: number, collectionPartitionKey?: string): Promise<void>  {
         return new Promise<void>(function(resolve, reject) {
             resolve();
         });

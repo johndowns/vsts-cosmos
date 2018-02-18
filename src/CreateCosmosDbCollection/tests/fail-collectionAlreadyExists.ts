@@ -8,8 +8,8 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tmr.setInput('authenticationType', 'key');
 tmr.setInput('accountName', 'endpoint');
 tmr.setInput('accountKey', 'key');
-tmr.setInput('databaseName', 'db');
-tmr.setInput('collectionName', 'coll');
+tmr.setInput('databaseId', 'db');
+tmr.setInput('collectionId', 'coll');
 tmr.setInput('collectionThroughput', '1000');
 tmr.setInput('collectionPartitionKey', 'partitionKey');
 tmr.setInput('collectionStorageCapacity', 'unlimited');
@@ -18,13 +18,13 @@ tmr.setInput('collectionFailIfExists', 'true');
 
 var databaseExists = false;
 tmr.registerMock('./cosmosDb', {
-    databaseExistsAsync: function(accountEndpoint: string, accountKey: string, databaseName: string): Promise<boolean> {
+    databaseExistsAsync: function(accountEndpoint: string, accountKey: string, databaseId: string): Promise<boolean> {
         return new Promise<boolean>(function(resolve, reject) {
             resolve(true);
         });
     },
 
-    collectionExistsAsync: function(accountEndpoint: string, accountKey: string, databaseName: string, collectionName: string): Promise<boolean> {
+    collectionExistsAsync: function(accountEndpoint: string, accountKey: string, databaseId: string, collectionId: string): Promise<boolean> {
         return new Promise<boolean>(function(resolve, reject) {
             resolve(true);
         });
