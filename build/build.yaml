@@ -22,13 +22,7 @@ steps:
   - task: Npm@1
     displayName: Install NPM Packages - Root
     inputs:
-      verbose: 'false'
-
-  - task: Npm@1
-    displayName: Install NPM Packages - Tasks
-    inputs:
-      verbose: 'false'
-      workingDir: 'src'
+      verbose: 'false''
 
   - task: Npm@1
     displayName: Install NPM Packages - CreateCosmosDbCollection
