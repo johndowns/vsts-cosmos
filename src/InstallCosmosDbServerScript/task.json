@@ -70,19 +70,19 @@
       "groupName": "connection"
     },
     {
-      "name": "collectionName",
+      "name": "collectionId",
       "type": "string",
-      "label": "Collection name",
+      "label": "Collection ID",
       "required": true,
       "helpMarkDown": "Unique identifier for the collection and used for id-based routing through REST and all SDKs",
       "groupName": "connection"
     },
     {
-      "name": "databaseName",
+      "name": "databaseId",
       "type": "string",
-      "label": "Database name",
+      "label": "Database ID",
       "required": true,
-      "helpMarkDown": "The name of the database that contains this collection.",
+      "helpMarkDown": "The identifier of the database that contains this collection.",
       "groupName": "connection"
     },
     {
@@ -142,20 +142,6 @@
       },
       "visibleRule": "scriptType = trigger",
       "groupName": "script"
-    },
-    
-    {
-      "name": "behaviourIfExists",
-      "type": "picklist",
-      "label": "If script already exists",
-      "defaultValue": "replace",
-      "helpMarkDown": "TODO",
-      "options": {
-        "replace": "Replace existing script",
-        "ignore": "Ignore and leave existing script intact",
-        "fail": "Fail the task"
-      },
-      "groupName": "advanced"
     }
   ],
   "groups": [
@@ -168,11 +154,6 @@
       "name": "script",
       "displayName": "Script",
       "isExpanded": true
-    },
-    {
-      "name": "advanced",
-      "displayName": "Advanced",
-      "isExpanded": false
     }
   ],
   "execution": {

@@ -2,6 +2,8 @@ import task = require('vsts-task-lib/task');
 import toolRunnerModule = require('vsts-task-lib/toolrunner');
 import * as cosmos from './cosmosDb'
 import * as azureRm from './azureRm'
+import fs = require('fs');
+import iconv = require('iconv-lite');
 
 async function run() {
     try {
@@ -9,14 +11,13 @@ async function run() {
         let authenticationType = task.getInput("authenticationType", true);
         let accountName = task.getInput("accountName", true);
         var accountKey = task.getInput("accountKey");
-        let collectionName = task.getInput("collectionName", true);
-        let databaseName = task.getInput("databaseName", true);
+        let collectionId = task.getInput("collectionId", true);
+        let databaseId = task.getInput("databaseId", true);
         let scriptId = task.getInput("scriptId", true);
-        let scriptFile = task.getPathInput("scriptFilePath", true, true);
+        let scriptFilePath = task.getPathInput("scriptFilePath", true, true);
         let scriptType = task.getInput("scriptType", true);
         let triggerType = task.getInput("triggerType");
         let triggerOperation = task.getInput("triggerOperation");
-        let behaviourIfExists = task.getInput('behaviourIfExists');
 
         // validate the inputs
         if (scriptType == "trigger" && (triggerType == undefined) || (triggerType == "")) {
@@ -48,11 +49,23 @@ async function run() {
 
         // run the main logic
         console.log('TODO creating...');
+        await installCosmosDbServerScript(accountName, accountKey, databaseId, collectionId, scriptId, scriptFilePath, scriptType, triggerType, triggerOperation);
 
         task.setResult(task.TaskResult.Succeeded, null);
     }
     catch (err) {
         task.setResult(task.TaskResult.Failed, err);
+    }
+}
+
+async function installCosmosDbServerScript(accountName: string, accountKey: string, databaseId: string, collectionId: string, scriptId: string, scriptFilePath: string, scriptType: string, triggerType: string, triggerOperation: string) {
+    let scriptFileContents: string = iconv.decode(fs.readFileSync(scriptFilePath), 'auto');
+    
+    if (scriptType == "udf") {
+        console.log(`Installing user-defined function '${scriptId}' into collection '${collectionId}'...`)
+        await cosmos.createUdfAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+    } else {
+        throw new Error('TODO not supported type');
     }
 }
 
