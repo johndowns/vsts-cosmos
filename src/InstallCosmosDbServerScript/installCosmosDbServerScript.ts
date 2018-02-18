@@ -2,7 +2,7 @@ import task = require('vsts-task-lib/task');
 import toolRunnerModule = require('vsts-task-lib/toolrunner');
 import * as cosmos from './cosmosDb'
 import * as azureRm from './azureRm'
-import * as files from './files'
+import fs = require('fs');
 
 async function run() {
     try {
@@ -57,7 +57,7 @@ async function run() {
 }
 
 async function installCosmosDbServerScript(accountName: string, accountKey: string, databaseId: string, collectionId: string, scriptId: string, scriptFilePath: string, scriptType: string, triggerType: string, triggerOperation: string) {
-    var scriptFileContents = files.getFileContents(scriptFilePath);
+    var scriptFileContents = fs.readFileSync(scriptFilePath).toString()
 
     var scriptExists: boolean;
     switch (scriptType) {
