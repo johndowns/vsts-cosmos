@@ -2,7 +2,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "tsc && mocha tests/_suite.js",
-    "vststest": "tsc && mocha tests/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=../../test-output/test-results.xml"
+    "vststest": "tsc && mocha tests/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=../../test-output/test-results-createCosmosDbCollection.xml"
   },
   "devDependencies": {
     "@types/documentdb": "^1.10.4",

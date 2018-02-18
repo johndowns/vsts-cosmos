@@ -25,6 +25,12 @@ steps:
       verbose: 'false'
 
   - task: Npm@1
+    displayName: Install NPM Packages - src
+    inputs:
+      verbose: 'false'
+      workingDir: 'src'
+
+  - task: Npm@1
     displayName: Install NPM Packages - CreateCosmosDbCollection
     inputs:
       verbose: 'false'
@@ -46,16 +52,16 @@ steps:
       workingDir: 'src/CreateCosmosDbCollection'
       customCommand: 'run vststest'
 
+  # TODO test InstallCosmosDbServerScript
+
   - task: PublishTestResults@2
     displayName: Publish Test Results
     inputs:
       testRunner: 'JUnit'
-      testResultsFiles: 'test-output/test-results.xml'
+      testResultsFiles: 'test-output/test-results-*.xml'
       searchFolder: '$(Build.SourcesDirectory)'
     condition: always()
   
-  # TODO test InstallCosmosDbServerScript
-
   # Build
 
   - task: Npm@1
@@ -79,7 +85,7 @@ steps:
   - task: DeleteFiles@1
     displayName: Delete NPM Development-Time Packages
     inputs:
-      SourceFolder: 'node_modules'
+      SourceFolder: 'src/node_modules'
       Contents: '**'
 
   - task: Npm@1
@@ -87,6 +93,7 @@ steps:
     inputs:
       command: 'custom'
       verbose: 'false'
+      workingDir: 'src'
       customCommand: 'install --only=production'
 
   - task: CopyFiles@2
