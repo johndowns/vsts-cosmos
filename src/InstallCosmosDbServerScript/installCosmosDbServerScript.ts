@@ -65,6 +65,10 @@ async function installCosmosDbServerScript(accountName: string, accountKey: stri
             console.log(`Checking if user-defined function '${scriptId}' exists in collection '${collectionId}'...`);
             scriptExists = await cosmos.udfExistsAsync(accountName, accountKey, databaseId, collectionId, scriptId);
             break;
+        case "storedprocedure":
+            console.log(`Checking if stored procedure '${scriptId}' exists in collection '${collectionId}'...`);
+            scriptExists = await cosmos.storedProcedureExistsAsync(accountName, accountKey, databaseId, collectionId, scriptId);
+            break;
         default:
             throw new Error(`Script type ${scriptType} not recognised`);
     }
@@ -77,6 +81,11 @@ async function installCosmosDbServerScript(accountName: string, accountKey: stri
                 console.log(`Installing user-defined function '${scriptId}' into collection '${collectionId}'...`)
                 await cosmos.createUdfAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
                 break;
+            case "storedprocedure":
+                console.log('Stored procefure does not exist.');
+                console.log(`Installing stored procedure '${scriptId}' into collection '${collectionId}'...`)
+                await cosmos.createStoredProcedureAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+                break;
             default:
                 throw new Error(`Script type ${scriptType} not recognised`);
         }
@@ -86,6 +95,11 @@ async function installCosmosDbServerScript(accountName: string, accountKey: stri
                 console.log('User-defined function already exists.');
                 console.log(`Replacing user-defined function '${scriptId}' in collection '${collectionId}'...`)
                 await cosmos.replaceUdfAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+                break;
+            case "storedprocedure":
+                console.log('Stored procedure already exists.');
+                console.log(`Replacing stored procedure '${scriptId}' in collection '${collectionId}'...`)
+                await cosmos.replaceStoredProcedureAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
                 break;
             default:
                 throw new Error(`Script type ${scriptType} not recognised`);
