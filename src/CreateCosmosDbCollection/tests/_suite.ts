@@ -154,6 +154,20 @@ describe('CreateCosmosDbCollection task', function () {
 
         done();
     });
+
+    it('success-armKeyRetrieved', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'success-armKeyRetrieved.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+
+        done();
+    });
     // #endregion
 
     // #region Failure Tests
@@ -213,6 +227,20 @@ describe('CreateCosmosDbCollection task', function () {
         assert(! tr.succeeded, 'should have failed');
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
         assert.equal(tr.errorIssues.length, 1, "should have one errors");
+
+        done();
+    });
+
+    it('fail-armKeyNotRetrieved', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'fail-armKeyNotRetrieved.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(! tr.succeeded, 'should not have succeeded');
+        assert.equal(tr.errorIssues.length, 1, "should have one error");
 
         done();
     });
