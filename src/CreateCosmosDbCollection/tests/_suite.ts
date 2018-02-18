@@ -9,6 +9,20 @@ describe('CreateCosmosDbCollection task', function () {
     after(() => {
     });
 
+    it('success-armKeyRetrieved', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'TODO.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+
+        done();
+    });
+    
     // #region Validation Tests
     it('should not validate when collectionThroughput is not a number', (done: MochaDone) => {
         this.timeout(1000);
