@@ -1,4 +1,4 @@
-import { DocumentClient, UriFactory, Collection, Procedure, Trigger, UserDefinedFunction } from 'documentdb';
+import { DocumentClient, UriFactory, Collection, Procedure, Trigger, TriggerOperation, TriggerType, UserDefinedFunction } from 'documentdb';
 
 export async function udfExistsAsync(
     accountName: string,
@@ -50,6 +50,34 @@ export async function storedProcedureExistsAsync(
                     resolve(false);
                 } else {
                     reject(`Check stored procedure exists operation failed with error code '${error.code}', body '${error}'.`);
+                }
+            });
+        }
+    );
+}
+
+export async function triggerExistsAsync(
+    accountName: string,
+    accountKey: string, 
+    databaseId: string,
+    collectionId: string,
+    triggerId: string): Promise<boolean> {
+    var accountEndpoint = `https://${accountName}.documents.azure.com`;
+    var client = new DocumentClient(accountEndpoint, {
+        masterKey: accountKey
+    });
+
+    let triggerLink = UriFactory.createTriggerUri(databaseId, collectionId, triggerId);
+
+    return new Promise<boolean>(function(resolve, reject) {
+        client.readTrigger(triggerLink, 
+            (error, resource, responseHeaders) => {
+                if (resource) {
+                    resolve(true);
+                } else if (error && error.code == 404) {
+                    resolve(false);
+                } else {
+                    reject(`Check trigger exists operation failed with error code '${error.code}', body '${error}'.`);
                 }
             });
         }
@@ -122,6 +150,44 @@ export async function createStoredProcedureAsync(
     );
 }
 
+export async function createTriggerAsync(
+    accountName: string,
+    accountKey: string, 
+    databaseId: string,
+    collectionId: string,
+    triggerId: string,
+    triggerScript: string,
+    triggerType: TriggerType,
+    triggerOperation: TriggerOperation)
+    : Promise<void> {
+    var accountEndpoint = `https://${accountName}.documents.azure.com`;
+    var client = new DocumentClient(accountEndpoint, {
+        masterKey: accountKey
+    });
+
+    let collectionLink = UriFactory.createDocumentCollectionUri(databaseId, collectionId);
+
+    return new Promise<void>(function(resolve, reject) {
+        client.createTrigger(collectionLink, 
+            {
+                id: triggerId,
+                body: triggerScript,
+                triggerType: triggerType,
+                triggerOperation: triggerOperation
+            },
+            {},
+            (error, resource, responseHeaders) => {
+                if (resource) {
+                    resolve();
+                }
+                else {
+                    reject(`Create trigger operation failed with error code '${error.code}', body '${error}'.`);
+                }
+            });
+        }
+    );
+}
+
 export async function replaceUdfAsync(
     accountName: string,
     accountKey: string, 
@@ -182,6 +248,44 @@ export async function replaceStoredProcedureAsync(
                 }
                 else {
                     reject(`Replace stored procedure operation failed with error code '${error.code}', body '${error}'.`);
+                }
+            });
+        }
+    );
+}
+
+export async function replaceTriggerAsync(
+    accountName: string,
+    accountKey: string, 
+    databaseId: string,
+    collectionId: string,
+    triggerId: string,
+    triggerScript: string,
+    triggerType: TriggerType,
+    triggerOperation: TriggerOperation)
+    : Promise<void> {
+    var accountEndpoint = `https://${accountName}.documents.azure.com`;
+    var client = new DocumentClient(accountEndpoint, {
+        masterKey: accountKey
+    });
+
+    let triggerLink = UriFactory.createTriggerUri(databaseId, collectionId, triggerId);
+
+    return new Promise<void>(function(resolve, reject) {
+        client.replaceTrigger(triggerLink, 
+            {
+                id: triggerId,
+                body: triggerScript,
+                triggerType: triggerType,
+                triggerOperation: triggerOperation
+            },
+            {},
+            (error, resource, responseHeaders) => {
+                if (resource) {
+                    resolve();
+                }
+                else {
+                    reject(`Replace trigger operation failed with error code '${error.code}', body '${error}'.`);
                 }
             });
         }

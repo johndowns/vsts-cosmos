@@ -47,7 +47,18 @@ async function run() {
         }
 
         // run the main logic
-        await installCosmosDbServerScript(accountName, accountKey, databaseId, collectionId, scriptId, scriptFilePath, scriptType, triggerType, triggerOperation);
+        if (scriptType == "trigger") {
+            if (triggerType != "Pre" && triggerType != "Post") {
+                throw new Error("TODO");
+            }
+            if (triggerOperation != "All" && triggerOperation != "Create" && triggerOperation != "Update" && triggerOperation != "Delete" && triggerOperation != "Replace") {
+                throw new Error("TODO");
+            }
+            await installCosmosDbServerScript(accountName, accountKey, databaseId, collectionId, scriptId, scriptFilePath, scriptType, triggerType, triggerOperation);
+        }
+        else {
+            await installCosmosDbServerScript(accountName, accountKey, databaseId, collectionId, scriptId, scriptFilePath, scriptType);
+        }
 
         task.setResult(task.TaskResult.Succeeded, null);
     }
@@ -56,7 +67,7 @@ async function run() {
     }
 }
 
-async function installCosmosDbServerScript(accountName: string, accountKey: string, databaseId: string, collectionId: string, scriptId: string, scriptFilePath: string, scriptType: string, triggerType: string, triggerOperation: string) {
+async function installCosmosDbServerScript(accountName: string, accountKey: string, databaseId: string, collectionId: string, scriptId: string, scriptFilePath: string, scriptType: string, triggerType?: "Pre" | "Post", triggerOperation?: "All" | "Create" | "Update" | "Delete" | "Replace") {
     var scriptFileContents = fs.readFileSync(scriptFilePath).toString()
 
     var scriptExists: boolean;
@@ -68,6 +79,10 @@ async function installCosmosDbServerScript(accountName: string, accountKey: stri
         case "storedprocedure":
             console.log(`Checking if stored procedure '${scriptId}' exists in collection '${collectionId}'...`);
             scriptExists = await cosmos.storedProcedureExistsAsync(accountName, accountKey, databaseId, collectionId, scriptId);
+            break;
+        case "trigger":
+            console.log(`Checking if trigger '${scriptId}' exists in collection '${collectionId}'...`);
+            scriptExists = await cosmos.triggerExistsAsync(accountName, accountKey, databaseId, collectionId, scriptId);
             break;
         default:
             throw new Error(`Script type ${scriptType} not recognised`);
@@ -82,9 +97,14 @@ async function installCosmosDbServerScript(accountName: string, accountKey: stri
                 await cosmos.createUdfAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
                 break;
             case "storedprocedure":
-                console.log('Stored procefure does not exist.');
+                console.log('Stored procedure does not exist.');
                 console.log(`Installing stored procedure '${scriptId}' into collection '${collectionId}'...`)
                 await cosmos.createStoredProcedureAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+                break;
+            case "trigger":
+                console.log('Trigger does not exist.');
+                console.log(`Installing ${triggerType}-trigger '${scriptId}' for operation '${triggerOperation}' into collection '${collectionId}'...`)
+                await cosmos.createTriggerAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents, triggerType, triggerOperation);
                 break;
             default:
                 throw new Error(`Script type ${scriptType} not recognised`);
@@ -100,6 +120,11 @@ async function installCosmosDbServerScript(accountName: string, accountKey: stri
                 console.log('Stored procedure already exists.');
                 console.log(`Replacing stored procedure '${scriptId}' in collection '${collectionId}'...`)
                 await cosmos.replaceStoredProcedureAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents);
+                break;
+            case "trigger":
+                console.log('Trigger already exists.');
+                console.log(`Replacing ${triggerType}-trigger '${scriptId}' for operation '${triggerOperation}' in collection '${collectionId}'...`)
+                await cosmos.replaceTriggerAsync(accountName, accountKey, databaseId, collectionId, scriptId, scriptFileContents, triggerType, triggerOperation);
                 break;
             default:
                 throw new Error(`Script type ${scriptType} not recognised`);
