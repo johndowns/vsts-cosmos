@@ -8,6 +8,7 @@
     "async": "^2.6.0",
     "azure-arm-cosmosdb": "^1.0.0-preview",
     "documentdb": "^1.14.2",
+    "iconv-lite": "^0.4.15",
     "vsts-task-lib": "^2.1.0"
   },
   "devDependencies": {
