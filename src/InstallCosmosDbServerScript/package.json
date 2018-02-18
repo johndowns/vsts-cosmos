@@ -4,12 +4,6 @@
     "test": "tsc && mocha tests/_suite.js",
     "vststest": "tsc && mocha tests/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=../../test-output/test-results.xml"
   },
-  "dependencies": {
-    "async": "^2.6.0",
-    "azure-arm-cosmosdb": "^1.0.0-preview",
-    "documentdb": "^1.14.2",
-    "vsts-task-lib": "^2.1.0"
-  },
   "devDependencies": {
     "@types/documentdb": "^1.10.4",
     "@types/mocha": "^2.2.48",
