@@ -18,12 +18,10 @@ export async function databaseExistsAsync(
             (error, resource, responseHeaders) => {
                 if (resource) {
                     resolve(true);
-                }
-                else if (error && error.code == 404) {
+                } else if (error && error.code == 404) {
                     resolve(false);
-                }
-                else {
-                    reject(`Check database exist operation failed with error code '${error.code}', body '${error}'.`);
+                } else {
+                    reject(`Check database exists operation failed with error code '${error.code}', body '${error}'.`);
                 }
             });
         }
@@ -71,12 +69,10 @@ export async function collectionExistsAsync(
             (error, resource, responseHeaders) => {
                 if (resource) {
                     resolve(true);
-                }
-                else if (error && error.code == 404) {
+                } else if (error && error.code == 404) {
                     resolve(false);
-                }
-                else {
-                    reject(`Check collection exist operation failed with error code '${error.code}', body '${error}'.`);
+                } else {
+                    reject(`Check collection exists operation failed with error code '${error.code}', body '${error}'.`);
                 }
             });
         }
