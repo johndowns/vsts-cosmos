@@ -11,6 +11,6 @@
     "package": "tfx extension create --manifest-globs vss-extension.json --output-path output/publish"
   },
   "devDependencies": {
-    "tfx-cli": "~0.5.4"
+    "tfx-cli": "~0.5.10"
   }
 }
